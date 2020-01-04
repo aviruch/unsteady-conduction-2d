@@ -98,4 +98,6 @@ subroutine explicit
     write(*, '(A)') "Explicit Solver Ends!"
     write(*, '(A, F12.8, A, /)') "Time Consumed:", toc - tic, "s."
 
+    deallocate(x, y, t, theta)
+
 end subroutine

@@ -1,3 +1,2 @@
 # Ignore output files
-out/analytic/*.*
-out/explicit/*.*
+/out/*

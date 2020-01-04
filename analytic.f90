@@ -43,4 +43,6 @@ subroutine analytic
     dir = ".\\out\\analytic\\"
     call visualize(dir, 0)
 
+    deallocate(x, y, t, theta)
+
 end subroutine

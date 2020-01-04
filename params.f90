@@ -17,7 +17,7 @@ module params
     real(kind=8) :: X_s, theta_s, tau_s, q_s
 
     ! Iteration Settings
-    real(kind=8) :: alpha
+    real(kind=8) :: alpha, omega
     real(kind=8) :: dX
     real(kind=8) :: taumax
     real(kind=8) :: dtau
