@@ -1,0 +1,10 @@
+{
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent",
+    "code-runner.defaultLanguage": "fortran",
+    "code-runner.executorMap": {
+        "fortran": "cd $dir && gfortran $fileName -J src\\ -o bin\\$fileNameWithoutExt && $dir\\bin\\$fileNameWithoutExt"
+    },
+    "code-runner.saveFileBeforeRun": true,
+    "fortran.gfortranExecutable": "/usr/local/bin/gfortran"
+}
