@@ -39,6 +39,13 @@ Soon...
 
 ### Explicit Method
 
+<table width="100%" border="0px" >
+    <tr>
+        <td><img width="300px" align="center" src="./doc/explicit_ctr.png"></img></td>
+        <td><img width="310px" align="center" src="./doc/explicit_dat.svg"></img></td>
+    </tr>
+</table>
+
 Soon...
 
 ### Implicit Method
@@ -66,10 +73,10 @@ Soon...
 
 Soon...
 
-<table border="0px" align="center">
+<table width="100%" border="0px" >
     <tr>
-        <td><img width="360px" src="./doc/analytic_ctr.png"></img></td>
-        <td><img width="360px" src="./doc/analytic_dat.svg"></img></td>
+        <td><img width="300px" align="center" src="./doc/analytic_ctr.png"></img></td>
+        <td><img width="310px" align="center" src="./doc/analytic_dat.svg"></img></td>
     </tr>
 </table>
 
