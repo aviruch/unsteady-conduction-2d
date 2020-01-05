@@ -6,5 +6,13 @@
         "fortran": "cd $dir && gfortran $fileName -J src\\ -o bin\\$fileNameWithoutExt && $dir\\bin\\$fileNameWithoutExt"
     },
     "code-runner.saveFileBeforeRun": true,
-    "fortran.gfortranExecutable": "/usr/local/bin/gfortran"
+    "fortran.gfortranExecutable": "/usr/local/bin/gfortran",
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ]
 }
