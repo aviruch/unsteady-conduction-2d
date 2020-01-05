@@ -8,7 +8,7 @@
 This repository gives Fortran 90 codes to solve two-dimensional unsteady heat conduction problem:
 
 - Numeric solutions which are programed in both **explicit** and **implicit** discrete method are included.
-- Analytic solution to this problem (Laplace equation) is derived, through separate variable method.
+- **Analytic** solution to this problem (Laplace equation) is derived, through separate variable method.
 
 ## Contents
 
@@ -52,7 +52,7 @@ Then a dimensionless governing equation can be derived:
 
 and the dimensionless boundary conditions are
 
-<p align="center"><img alt="$$&#10;\left\{&#10;\begin{array}{ll}&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=0} = \dfrac{-H q_w}{\lambda (T_1-T_0)}, &#10;&amp; \theta(X,0,\tau) = 1, \\[1.5em]&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=1} = \dfrac{H q_e}{\lambda (T_1-T_0)}, &#10;&amp; \theta(X,1,\tau) = 0.&#10;\end{array}&#10;\right.&#10;$$" src="./doc/formula/c7b92fb48b84980ad77be4a5a5ac46f4.svg" align="middle" width="312.7476pt" height="94.68557999999999pt"/></p>
+<p align="center"><img alt="$$&#10;\left\{&#10;\begin{array}{ll}&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=0} = \dfrac{-H q_w}{\lambda (T_1-T_0)} = -q_w^\ast, &#10;&amp; \theta(X,0,\tau) = 1, \\[1.5em]&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=1} = \dfrac{H q_e}{\lambda (T_1-T_0)} = q_e^\ast, &#10;&amp; \theta(X,1,\tau) = 0.&#10;\end{array}&#10;\right.&#10;$$" src="./doc/formula/134d9e93196d6e61c77c6b514371c603.svg" align="middle" width="365.43045pt" height="94.68557999999999pt"/></p>
 
 
 ## Numerical Solution
@@ -94,7 +94,26 @@ Soon...
 
 ## Analytical Solution
 
-Soon...
+Considering that the Laplace equation is a kind of linear equation, the original equation and boundary conditions can be isolated to three parts <img alt="$\text{E}_1$" src="./doc/formula/278b90d99558726b26fb43f8def8b042.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/>, <img alt="$\text{E}_2$" src="./doc/formula/975aeec5482df93394e935220136a624.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> and <img alt="$\text{E}_3$" src="./doc/formula/f4983d931a0acb7db268de7692c60aff.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/>. Each part has only one non-homogeneous item in boundary conditions.
+
+<p align="center"><img alt="$$&#10;\text{E}_1\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_1}{\partial X^2} + \dfrac{\partial^2\theta_1}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_1}{\partial X}\right\vert_{X=1} = 0, \\&#10;    &amp; \left. \theta_1\right\vert_{Y=0} = 1, \\&#10;    &amp; \left. \theta_1\right\vert_{Y=1} = 0.&#10;\end{aligned}&#10;\right. \quad &#10;\text{E}_2\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_2}{\partial X^2} + \dfrac{\partial^2\theta_2}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_2}{\partial X}\right\vert_{X=0} = -q_w^\ast, \\&#10;    &amp; \left. \dfrac{\partial \theta_2}{\partial X}\right\vert_{X=1} = 0, \\&#10;    &amp; \left. \theta_2\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_2\right\vert_{Y=1} = 0.&#10;\end{aligned}&#10;\right. \quad &#10;\text{E}_3\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_3}{\partial X^2} + \dfrac{\partial^2\theta_3}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_3}{\partial X}\right\vert_{X=0} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_3}{\partial X}\right\vert_{X=1} = q_e^\ast, \\&#10;    &amp; \left. \theta_3\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_3\right\vert_{Y=1} = 0.&#10;\end{aligned}&#10;\right.&#10;$$" src="./doc/formula/efaf119f534a3ef7930139cf65f507e1.svg" align="middle" width="530.7324pt" height="179.44905pt"/></p>
+
+Dimensionless temperature <img alt="$\theta$" src="./doc/formula/27e556cf3caa0673ac49a8f0de3c73ca.svg" align="middle" width="8.173588500000005pt" height="22.831379999999992pt"/> will be the addition of <img alt="$\theta_1$" src="./doc/formula/edcbf8dd6dd9743cceeee21183bbc3b6.svg" align="middle" width="14.269530000000003pt" height="22.831379999999992pt"/>, <img alt="$\theta_2$" src="./doc/formula/f1fe0aebb1c952f09cdbfd83af41f50e.svg" align="middle" width="14.269530000000003pt" height="22.831379999999992pt"/> and <img alt="$\theta_3$" src="./doc/formula/ef3e4ae43ab69ed7bc41775203af5d03.svg" align="middle" width="14.269530000000003pt" height="22.831379999999992pt"/>. With **separate variable method**, <img alt="$\theta_i$" src="./doc/formula/f166369f3ef0a7ff052f1e9bbf57d2e2.svg" align="middle" width="12.367905000000004pt" height="22.831379999999992pt"/> (<img alt="$i \in\{1,2,3\}$" src="./doc/formula/347b6e009f0f84af572622332ca74e39.svg" align="middle" width="81.462315pt" height="24.65759999999998pt"/>) can be written as
+<p align="center"><img alt="$$&#10;\theta_i(X,Y) = F_i(X)G_i(Y),&#10;$$" src="./doc/formula/dc256a6a3214ac1cde8f0cffac3b5548.svg" align="middle" width="175.07325pt" height="16.438356pt"/></p>
+
+where <img alt="$F_i(X)$" src="./doc/formula/c990059c5755182724a5d30891979abb.svg" align="middle" width="43.737705000000005pt" height="24.65759999999998pt"/> and <img alt="$G_i(X)$" src="./doc/formula/9865f3644044214150e99633b4063575.svg" align="middle" width="46.091595pt" height="24.65759999999998pt"/> are not always 0. Substituting the above expression into dimensionless Laplace's equation, 
+<p align="center"><img alt="$$&#10;\frac{F_i^{\prime\prime}(X)}{F_i(X)} = -\frac{G_i^{\prime\prime}(Y)}{G_i(Y)}.&#10;$$" src="./doc/formula/5cfb5830d8d9c2107a583bfecbdd02d4.svg" align="middle" width="141.44509499999998pt" height="38.864264999999996pt"/></p>
+
+The left side of this equation is a function of <img alt="$X$" src="./doc/formula/cbfb1b2a33b28eab8a3e59464768e810.svg" align="middle" width="14.908740000000003pt" height="22.46574pt"/> which has nothing to do with <img alt="$Y$" src="./doc/formula/91aac9730317276af725abd8cef04ca9.svg" align="middle" width="13.196370000000005pt" height="22.46574pt"/>, whereas the right side of this equation is a function of <img alt="$Y$" src="./doc/formula/91aac9730317276af725abd8cef04ca9.svg" align="middle" width="13.196370000000005pt" height="22.46574pt"/> which has nothing to do with <img alt="$X$" src="./doc/formula/cbfb1b2a33b28eab8a3e59464768e810.svg" align="middle" width="14.908740000000003pt" height="22.46574pt"/>. Therefore, the both sides must be equal to one constant <img alt="$-k_i$" src="./doc/formula/deff2863eef31b4c81b8466899cd9535.svg" align="middle" width="25.994265000000002pt" height="22.831379999999992pt"/>.
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;    F_i^{\prime\prime}(X) + k_iF_i(X) = 0, \\[0.5em]&#10;    G_i^{\prime\prime}(Y) - k_iG_i(Y) = 0.&#10;\end{array}&#10;$$" src="./doc/formula/a6d61fb103680d14d1f6adedb2cf1afd.svg" align="middle" width="161.512395pt" height="44.58201pt"/></p>
+
+The general solutions of <img alt="$F_i(X)$" src="./doc/formula/c990059c5755182724a5d30891979abb.svg" align="middle" width="43.737705000000005pt" height="24.65759999999998pt"/> and <img alt="$G_i(Y)$" src="./doc/formula/d4660a5b2a4edfb974de111adec12717.svg" align="middle" width="44.37939pt" height="24.65759999999998pt"/> are
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;    F_i(X) = \left\{\begin{aligned}&#10;        &amp;A_i^0X + B_i^0, &amp; k_i=0, \\&#10;        &amp;A_i^+\sin\sqrt{k_i}X + B_i^+\cos\sqrt{k_i}X, &amp; k_i&gt; 0, \\&#10;        &amp;A_i^-\sinh\sqrt{-k_i}X + B_i^-\cosh\sqrt{-k_i}X, &amp; k_i&lt; 0; \\&#10;    \end{aligned}\right. \\[2.5em]&#10;    G_i(Y) = \left\{\begin{aligned}&#10;        &amp;C_i^0Y + D_i^0, &amp; k_i=0, \\&#10;        &amp;C_i^+\sinh\sqrt{k_i}Y + D_i^+\cosh\sqrt{k_i}Y, &amp; k_i&gt; 0, \\&#10;        &amp;C_i^-\sin\sqrt{-k_i}Y + D_i^-\cos\sqrt{-k_i}Y, &amp; k_i&lt; 0.&#10;    \end{aligned}\right. &#10;\end{array}&#10;$$" src="./doc/formula/6fbb78257d19a7967abfec230e9113c9.svg" align="middle" width="404.73839999999996pt" height="162.12982499999998pt"/></p>
+
+
+
+
+
 
 <p align="center">
   <img width="260px" src="./doc/analytic_ctr.png"></img>
