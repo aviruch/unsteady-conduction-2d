@@ -1,2 +1,9 @@
 # Ignore output files
 /out/*
+
+# Ignore .sh or .bat conmands
+*.sh
+*.bat
+
+# Ignore readme source file
+README_RAW.md
