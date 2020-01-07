@@ -46,7 +46,7 @@ subroutine analytic
 
     theta = reshape(theta1 + theta2 + theta3, (/N*N/))
     T = theta*(T1 - T0) + T0
-    call visualize(dir, 0)
+    ! call visualize(dir, 0)
 
     ! call output(dir, 0, "Temperature", T)
 

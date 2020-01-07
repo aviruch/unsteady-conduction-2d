@@ -17,7 +17,7 @@ subroutine explicit
     call init()
     dir = ".\\out\\explicit\\"
     call checkdir(dir)
-    call visualize(dir, 0)
+    ! call visualize(dir, 0)
 
     ! Time Marching
     tau = 0
@@ -84,7 +84,7 @@ subroutine explicit
         T = theta*theta_s + T0
 
         ! Temperature Visualization
-        call visualize(dir, iter)
+        ! call visualize(dir, iter)
         
         ! Steady Criteria
         steady_err = maxval(abs(theta - theta0)/theta0)

@@ -43,24 +43,24 @@ end subroutine
 
 subroutine output(dir, iter, name, value)
 
-    use params, only: Nx, Ny
+    use params, only: N
     implicit none
 
-    character(len=*), intent(in) :: dir, name
-    integer*4,        intent(in) :: iter
-    real*8,           intent(in) :: value(Nx,Ny)
-    character(len=8)             :: iter_str
-    character(len=:)             :: file_name
-    integer*4                    :: I, J
+    character(len=*), intent(in)  :: dir, name
+    integer*4,        intent(in)  :: iter
+    real*8,           intent(in)  :: value(N,N)
+    character(len=8)              :: iter_str
+    character(len=:), allocatable :: file_name
+    integer*4                     :: I, J
 
     write(iter_str, '(I8.8)') iter
     file_name = dir//name//"."//iter_str//".dat"
     open(10, file=file_name, action="write", &
         & status="replace")
     write(10, *) "variables=x,y,"//name
-    write(10, *) "zone i=", Nx, "j=", Ny, "f=point"
-    do J = 1, Ny
-        do I = 1, Nx
+    write(10, *) "zone i=", N, "j=", N, "f=point"
+    do J = 1, N
+        do I = 1, N
             write(10, *) I, J, value(I,J)
         end do
     end do

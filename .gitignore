@@ -1,7 +1,10 @@
+# Ignore VS Code config
+/.vscode
+
 # Ignore output files
-/bin
-/src
-/out
+/build
+/CMakeFiles
+CMakeCache.txt
 
 # Ignore .sh or .bat conmands
 *.sh

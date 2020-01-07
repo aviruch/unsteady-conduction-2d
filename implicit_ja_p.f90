@@ -19,7 +19,7 @@ subroutine implicit_ja_p
     call init()
     dir = ".\\out\\implicit_ja_p\\"
     call checkdir(dir)
-    call visualize(dir, 0)
+    ! call visualize(dir, 0)
     
     aP = 1 + 4*alpha
     aW = alpha
@@ -143,7 +143,7 @@ subroutine implicit_ja_p
         T = theta*theta_s + T0
 
         ! Temperature Visualization
-        call visualize(dir, iter)
+        ! call visualize(dir, iter)
         
         ! Steady Criteria
         steady_err = maxval(abs(theta - theta0)/theta0)
