@@ -1,5 +1,7 @@
 # Ignore output files
-/out/*
+/bin
+/src
+/out
 
 # Ignore .sh or .bat conmands
 *.sh

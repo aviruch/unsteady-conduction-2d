@@ -3,7 +3,7 @@
     "editor.wrappingIndent": "indent",
     "code-runner.defaultLanguage": "fortran",
     "code-runner.executorMap": {
-        "fortran": "cd $dir && gfortran $fileName -J src\\ -o bin\\$fileNameWithoutExt && $dir\\bin\\$fileNameWithoutExt"
+        "fortran": "cd $dir && rmdir /s/q bin\\ && rmdir /s/q src\\ && md bin\\ && md src\\ && gfortran $fileName -J src\\ -o bin\\$fileNameWithoutExt && $dir\\bin\\$fileNameWithoutExt"
     },
     "code-runner.saveFileBeforeRun": true,
     "fortran.gfortranExecutable": "/usr/local/bin/gfortran",
