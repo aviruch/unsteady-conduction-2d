@@ -12,6 +12,7 @@ This repository gives Fortran 90 codes to solve two-dimensional unsteady heat co
 
 ## Contents
 
+- [Installation](#installation)
 - [Problem Definition](#problem-definition)
 - [Dimensionless Laplace Equation](#dimensionless-laplace-equation)
 - [Numerical Solution](#numerical-solution)
@@ -25,6 +26,21 @@ This repository gives Fortran 90 codes to solve two-dimensional unsteady heat co
 - [Reference](#reference)
 - [License](#license)
 
+## Installation
+
+- Clone this repository using [Git](https://git-scm.com/).
+
+```
+$ git clone https://github.com/Arsennnic/unsteady-conduction-2d.git
+```
+
+- Compile with [CMake](https://cmake.org/) and [MinGW](http://www.mingw.org/).
+```
+$ cd unsteady-conduction-2d/
+$ cmake -G "MinGW Makefiles" -B build/
+$ cd build/
+$ mingw32-make
+```
 
 ## Problem Definition
 
