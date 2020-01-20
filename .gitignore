@@ -1,14 +1,12 @@
-# Ignore VS Code config
+# Ignore VS Code config settings
 /.vscode
 
-# Ignore output files
+# Ignore cmake output files
 /build
-/CMakeFiles
-CMakeCache.txt
+
+# Ignore readme source file
+README_RAW.md
 
 # Ignore .sh or .bat conmands
 *.sh
 *.bat
-
-# Ignore readme source file
-README_RAW.md

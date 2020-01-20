@@ -15,12 +15,12 @@
 ! 
 !   2. Call subroutine to write data files. Add 
 !      the following lines in the time-marching 
-!      loop, note that "name" and "value" should 
+!      loop, note that "var" and "val" should 
 !      be replaced with specific name and value
 !      of your variale.
 !
 !      iter = iter + 1
-!      call output(dir, iter, "name", vaule)
+!      call output(dir, iter, "var", val)
 ! 
 ! =================================================
 
@@ -30,7 +30,7 @@ subroutine checkdir(dir)
     implicit none
 
     character(len=*) :: dir
-    logical :: dir_exist
+    logical          :: dir_exist
 
     inquire(file=dir, exist=dir_exist)
     if (dir_exist) then
@@ -41,29 +41,36 @@ subroutine checkdir(dir)
 end subroutine
 
 
-subroutine output(dir, iter, name, value)
+subroutine output(dir, iter, var, val)
 
-    use params, only: N
+    use params, only: Nx, Ny, x, y
     implicit none
 
-    character(len=*), intent(in)  :: dir, name
+    character(len=*), intent(in)  :: dir, var
     integer*4,        intent(in)  :: iter
-    real*8,           intent(in)  :: value(N,N)
+    real*8,           intent(in)  :: val(Ny,Nx)
+
     character(len=8)              :: iter_str
-    character(len=:), allocatable :: file_name
+    character(len=:), allocatable :: file
+    real*8                        :: x1d(Ny*Nx)
+    real*8                        :: y1d(Ny*Nx)
+    real*8                        :: f1d(Ny*Nx)
     integer*4                     :: I, J
 
     write(iter_str, '(I8.8)') iter
-    file_name = dir//name//"."//iter_str//".dat"
-    open(10, file=file_name, action="write", &
+    file = dir//var//"."//iter_str//".dat"
+    open(10, file=file, action="write", &
         & status="replace")
-    write(10, *) "variables=x,y,"//name
-    write(10, *) "zone i=", N, "j=", N, "f=point"
-    do J = 1, N
-        do I = 1, N
-            write(10, *) I, J, value(I,J)
-        end do
+    write(10, *) "variables=x,y,"//var
+    write(10, *) "zone i=", Ny, "j=", Nx, "f=point"
+
+    x1d = reshape(x, (/Ny*Nx/))
+    y1d = reshape(y, (/Ny*Nx/))
+    f1d = reshape(val, (/Ny*Nx/))
+    do I = 1, Ny*Nx
+        write(10, *) x1d(I), y1d(I), f1d(I)
     end do
+
     close(10)
 
 end subroutine

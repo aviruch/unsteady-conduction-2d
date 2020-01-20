@@ -1,32 +1,44 @@
+! =================================================
+!   Module to set global variables.
+! =================================================
+
 module params
 
-    ! Pysical Parameters
-    real(kind=8), parameter :: H = 3.0
-    real(kind=8), parameter :: rho = 7820
-    real(kind=8), parameter :: c = 460
-    real(kind=8), parameter :: lambda = 15
-    real(kind=8), parameter :: T0 = 250.0
-    real(kind=8), parameter :: T1 = 400.0
-    real(kind=8), parameter :: qw = 750.0
-    real(kind=8), parameter :: qe = 750.0
+    ! Pysical parameters
+    real*8, parameter :: Lx  = 3.
+    real*8, parameter :: Ly  = 5.
+    real*8, parameter :: rho = 7820.
+    real*8, parameter :: c   = 460.
+    real*8, parameter :: lbd = 15.
+    real*8, parameter :: Ts  = 500.
+    real*8, parameter :: Tn  = 300.
+    real*8, parameter :: qw  = 800.
+    real*8, parameter :: qe  = 800.
 
-    ! Mesh Settings
-    integer(kind=4), parameter :: N = 10
+    ! Mesh settings 
+    integer*4, parameter :: Nx = 30
+    integer*4, parameter :: Ny = 50
 
-    ! Dimensionless Scalars
-    real(kind=8) :: X_s, theta_s, tau_s, q_s
+    ! Time, space and temperature
+    real*8                   :: dx, dy
+    real*8, dimension(Ny,Nx) :: x, y
+    real*8, dimension(Ny,Nx) :: T
 
-    ! Iteration Settings
-    real(kind=8) :: alpha, omega
-    real(kind=8) :: dX
-    real(kind=8) :: taumax
-    real(kind=8) :: dtau
-    real(kind=8), parameter :: steady_cr = 1e-4
-    real(kind=8), parameter :: conv_cr = 1e-4
+    ! Dimensionless scalars
+    real*8                   :: dx_, dy_
+    real*8, dimension(Ny,Nx) :: x_, y_
+    real*8, dimension(Ny,Nx) :: T_
+    real*8                   :: qw_, qe_
 
-    ! Iterative Variables
-    real(kind=8), allocatable :: x(:), y(:)
-    real(kind=8), allocatable :: T(:)
-    real(kind=8), allocatable :: theta(:), theta0(:)
+    ! Time-marching settings
+    real*8            :: alpha    = 0.25
+    real*8            :: tau_
+    real*8, parameter :: tau_step = 1.
+    real*8, parameter :: tau_max  = 1000.
+
+    ! Convegence settings
+    real*8            :: omega     = 1.
+    real*8, parameter :: steady_cr = 1e-4
+    real*8, parameter :: conv_cr   = 1e-4
     
 end module
