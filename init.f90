@@ -14,10 +14,10 @@ subroutine init
     ! Mesh coordinates
     dx = Lx/Nx
     dy = Ly/Ny
-    do I = 1, Ny
-        do J = 1, Nx
-            x(I,J) = (J - 0.5)*dx
-            y(I,J) = (I - 0.5)*dy
+    do I = 1, Nx
+        do J = 1, Ny
+            x(I,J) = (I - 0.5)*dx
+            y(I,J) = (J - 0.5)*dy
         end do
     end do
 

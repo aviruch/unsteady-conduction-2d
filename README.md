@@ -46,7 +46,7 @@ $ mingw32-make
 
 <img width="300px" align="right" src="./doc/problem_def.svg"></img>
 
-The governing equation of the two-dimensional unsteady heat conduction problem defined in a square region is
+The governing equation of the two-dimensional unsteady heat conduction problem defined in a rectangle region is
 
 <p align="center"><img alt="$$&#10;\rho c \frac{\partial T}{\partial t} = \lambda\left( \frac{\partial^2 T}{\partial x^2} + \frac{\partial^2 T}{\partial y^2} \right),&#10;$$" src="./doc/formula/9828042524f60a32db2ae6e910a98c87.svg" align="middle" width="192.63089999999997pt" height="40.118265pt"/></p>
 
@@ -68,18 +68,67 @@ Then a dimensionless governing equation can be derived:
 
 and the dimensionless boundary conditions are
 
-<p align="center"><img alt="$$&#10;\left\{&#10;\begin{array}{ll}&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=0} = \dfrac{-L q_w}{\lambda (T_n-T_s)} = -q_w^\ast, &#10;&amp; \left.\theta\right\vert_{Y=0} = 0, \\[1.5em]&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=L_x/L} = \dfrac{L q_e}{\lambda (T_n-T_s)} = q_e^\ast, &#10;&amp; \left.\theta\right\vert_{Y=L_y/L} = 1.&#10;\end{array}&#10;\right.&#10;$$" src="./doc/formula/356f02ccd5f53e129d22e9db0842a567.svg" align="middle" width="378.16845pt" height="98.63106pt"/></p>
+<p align="center"><img alt="$$&#10;\left\{&#10;\begin{array}{ll}&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=0} = \dfrac{-L q_w}{\lambda (T_n-T_s)} = -\phi_w, &#10;&amp; \left.\theta\right\vert_{Y=0} = 0, \\[1.5em]&#10;\left. \dfrac{\partial \theta}{\partial X}\right\vert_{X=L_x/L} = \dfrac{L q_e}{\lambda (T_n-T_s)} = \phi_e, &#10;&amp; \left.\theta\right\vert_{Y=L_y/L} = 1.&#10;\end{array}&#10;\right.&#10;$$" src="./doc/formula/6dfc7e5ce2592f6568c0e270f4a1ca15.svg" align="middle" width="379.5363pt" height="98.63106pt"/></p>
 
 
 ## Numerical Solution
 
 Physical parameters listed below will be used in  following simulations and analyses.
 
-<p align="center"><img alt="$$&#10;\begin{matrix}&#10;L_x = 3\text{m}, \quad L_y = 5\text{m}, \quad \rho = 7820\text{kg/m}^\text{3}, \quad c = 460\text{J/(kg}\cdot\text{K)}, \quad \lambda = 15\text{W/(m}\cdot\text{K)}, \\[0.5em]&#10;T_s = 500\text{K}, \quad T_n = 300\text{K}, \quad q_w = 800\text{W/m}^\text{2}, \quad q_e = 800\text{W/m}^\text{2}.&#10;\end{matrix}&#10;$$" src="./doc/formula/12fa18005c7652a3ddecc346e0522892.svg" align="middle" width="584.1412499999999pt" height="49.607414999999996pt"/></p>
+<p align="center"><img alt="$$&#10;\begin{matrix}&#10;L_x = 3\text{m}, \quad L_y = 4.5\text{m}, \quad \rho = 7820\text{kg/m}^\text{3}, \quad c = 460\text{J/(kg}\cdot\text{K)}, \quad \lambda = 15\text{W/(m}\cdot\text{K)}, \\[0.5em]&#10;T_s = 500\text{K}, \quad T_n = 300\text{K}, \quad q_w = 800\text{W/m}^\text{2}, \quad q_e = 800\text{W/m}^\text{2}.&#10;\end{matrix}&#10;$$" src="./doc/formula/580cf32af458febe628e01bedaa074ee.svg" align="middle" width="596.9271pt" height="49.607414999999996pt"/></p>
 
 ### Explicit Method
 
-Soon...
+Integral numerical formulation can be written in explicit format:
+
+<p align="center"><img alt="$$&#10;\left( \theta_{i, j} - \theta_{i, j}^0 \right)\Delta X \Delta Y&#10;= \left( \frac{\theta_{i - 1, j}^0 - \theta_{i, j}^0}{\delta X_e} - \frac{\theta_{i, j}^0 - \theta_{i + 1, j}^0}{\delta X_w} \right) \Delta Y \Delta\tau + \left( \frac{\theta_{i, j - 1}^0 - \theta_{i, j}^0}{\delta Y_n} - \frac{\theta_{i, j}^0 - \theta_{i, j + 1}^0}{\delta Y_s} \right) \Delta X \Delta\tau.&#10;$$" src="./doc/formula/2d8661453f15fa8d39c0218bbea8a002.svg" align="middle" width="725.53635pt" height="49.31553pt"/></p>
+
+Assumed that <img alt="$\delta X_w = \delta X_e = \Delta X$" src="./doc/formula/6ed26e67ceebdffe6e87a74961a9b621.svg" align="middle" width="133.236345pt" height="22.831379999999992pt"/> and <img alt="$\delta Y_s = \delta Y_n = \Delta Y$" src="./doc/formula/061f8e328602728638dfaa50b0fc6920.svg" align="middle" width="121.64756999999999pt" height="22.831379999999992pt"/>, the formulation above can be simplified as
+
+<p align="center"><img alt="$$&#10;\theta_{i, j} = (1 - 2\alpha_X - 2\alpha_Y) \theta_{i, j}^0 + \alpha_X \theta_{i - 1, j}^0 + \alpha_X \theta_{i + 1, j}^0 + \alpha_Y \theta_{i, j - 1}^0 + \alpha_Y \theta_{i, j + 1}^0,&#10;$$" src="./doc/formula/b1f945ab0f9fb6a0fde91c558eac9281.svg" align="middle" width="525.3286499999999pt" height="20.504055pt"/></p>
+
+where <img alt="$\alpha_X = \Delta\tau / (\Delta X)^2$" src="./doc/formula/040ad3b1a03349e62ce33b2b0a7acc3e.svg" align="middle" width="123.83992499999998pt" height="26.76201000000001pt"/> and <img alt="$\alpha_Y = \Delta\tau / (\Delta Y)^2$" src="./doc/formula/744f942adb324c4f8861a86248fb4aa7.svg" align="middle" width="121.01133000000002pt" height="26.76201000000001pt"/>, subscript <img alt="$i$" src="./doc/formula/77a3b857d53fb44e33b53e4c8b68351a.svg" align="middle" width="5.663295000000005pt" height="21.683310000000006pt"/> ranges from <img alt="$2$" src="./doc/formula/76c5792347bb90ef71cfbace628572cf.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> to <img alt="$N_X - 1$" src="./doc/formula/532b7605c4b8992fb438154234441fc6.svg" align="middle" width="54.014894999999996pt" height="22.46574pt"/> and subscript <img alt="$j$" src="./doc/formula/36b5afebdba34564d884d347484ac0c7.svg" align="middle" width="7.710483000000004pt" height="21.683310000000006pt"/> ranges from <img alt="$2$" src="./doc/formula/76c5792347bb90ef71cfbace628572cf.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> to <img alt="$N_Y - 1$" src="./doc/formula/aa0f44a25a38cafd470df7c14f76c6a8.svg" align="middle" width="52.89850499999999pt" height="22.46574pt"/>. <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/> and <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/> are respectively number of mesh nodes. 
+
+Bottom and top sides are Dirichlet's boundaries, where non-dimensional temperature of boundaries <img alt="$\theta_B$" src="./doc/formula/85adc7353e07e5bc03447f24cf3e589b.svg" align="middle" width="18.209565pt" height="22.831379999999992pt"/> is introduced: 
+
+- When <img alt="$i \neq 1$" src="./doc/formula/573091b03bafd592cd7acd78b9fbd635.svg" align="middle" width="35.800050000000006pt" height="22.831379999999992pt"/> or <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/>, <img alt="$j = 1$" src="./doc/formula/99c0c04664ba70db8077b2b6415b2d85.svg" align="middle" width="37.847370000000005pt" height="21.683310000000006pt"/>, <img alt="$\theta_B = \theta_s = 0$" src="./doc/formula/3d8edabcee55caa0a40be072b5f54525.svg" align="middle" width="85.82903999999999pt" height="22.831379999999992pt"/>,
+
+<p align="center"><img alt="$$&#10;\frac{\theta_{i, 1} - \theta_B}{\Delta Y / 2} = \frac{\theta_{i, 2} - \theta_B}{3\Delta Y / 2} &#10;\quad \Rightarrow \quad &#10;\theta_{i, 1} = \frac{1}{3} \theta_{i, 2}; &#10;$$" src="./doc/formula/3bcc796d212ac5350e7537dfe75b7838.svg" align="middle" width="297.7623pt" height="37.92162pt"/></p>
+
+- When <img alt="$i \neq 1$" src="./doc/formula/573091b03bafd592cd7acd78b9fbd635.svg" align="middle" width="35.800050000000006pt" height="22.831379999999992pt"/> or <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>,
+
+<p align="center"><img alt="$$&#10;\frac{\theta_{i, N_Y} - \theta_B}{\Delta Y / 2} = \frac{\theta_{i, N_Y - 1} - \theta_B}{3 \Delta Y / 2} &#10;\quad \Rightarrow \quad&#10;\theta_{i, N_Y} = \frac{1}{3} \theta_{i, N_Y - 1} + \frac{2}{3}.&#10;$$" src="./doc/formula/2d9daca071c442ee33c5508c2b924585.svg" align="middle" width="418.62975pt" height="37.92162pt"/></p>
+
+Left and right sides are Neumann's boundaries, where non-dimensional heat flux <img alt="$\phi_B$" src="./doc/formula/8216311d8816a6198c9522ae9d7abbc0.svg" align="middle" width="20.287245000000002pt" height="22.831379999999992pt"/> is introduced: 
+
+- When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg" align="middle" width="35.800050000000006pt" height="21.683310000000006pt"/>, <img alt="$j \neq 1$" src="./doc/formula/ba27f6e293029d5bbf4188faa7b0598c.svg" align="middle" width="37.847370000000005pt" height="22.831379999999992pt"/> or <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/>, <img alt="$\phi_B = 2(\theta_B - \theta_{1, j}) / \Delta X = \phi_w$" src="./doc/formula/e41d1f1c2de897c472fd2e43375cce22.svg" align="middle" width="206.61250499999997pt" height="24.65759999999998pt"/>, 
+
+<p align="center"><img alt="$$&#10;\theta_{1, j} = (1 - \alpha_X - 2\alpha_Y) \theta_{1, j}^0 + \frac{\alpha_X}{2} \Delta X \phi_w + \alpha_X \theta_{2, j}^0 + \alpha_Y \theta_{1, j - 1}^0 + \alpha_Y \theta_{1, j + 1}^0; &#10;$$" src="./doc/formula/361d069d8354e412cd701e03939b6315.svg" align="middle" width="522.9378pt" height="29.474114999999998pt"/></p>
+
+- When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j \neq 1$" src="./doc/formula/ba27f6e293029d5bbf4188faa7b0598c.svg" align="middle" width="37.847370000000005pt" height="22.831379999999992pt"/> or <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/>, <img alt="$\phi_B = 2(\theta_B - \theta_{N_X, j}) / \Delta X = \phi_e$" src="./doc/formula/3a40dc2713a8f763af89d563dcd422f9.svg" align="middle" width="217.489305pt" height="24.65759999999998pt"/>, 
+
+<p align="center"><img alt="$$&#10;\theta_{N_X, j} = (1 - \alpha_X - 2\alpha_Y) \theta_{N_X, j}^0 + \alpha_X \theta_{N_X - 1, j}^0 + \frac{\alpha_X}{2} \Delta X \phi_e + \alpha_Y \theta_{N_X, j - 1}^0 + \alpha_Y \theta_{N_X, j + 1}^0. &#10;$$" src="./doc/formula/8e38d1e95ad608aae7ef3b508647c2a7.svg" align="middle" width="608.4771pt" height="29.474114999999998pt"/></p>
+
+Four corners are the combination of Dirichlet's and Neumann's boundaries: 
+
+- When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg" align="middle" width="35.800050000000006pt" height="21.683310000000006pt"/>, <img alt="$j = 1$" src="./doc/formula/99c0c04664ba70db8077b2b6415b2d85.svg" align="middle" width="37.847370000000005pt" height="21.683310000000006pt"/>, <img alt="$\theta_B = \theta_s = 0$" src="./doc/formula/3d8edabcee55caa0a40be072b5f54525.svg" align="middle" width="85.82903999999999pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_w$" src="./doc/formula/6eb8e82173e2cfec99643fc2f2a8c895.svg" align="middle" width="62.640600000000006pt" height="22.831379999999992pt"/>,
+
+<p align="center"><img alt="$$&#10;\theta_{1, 1}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{1, 1}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, 1}^0 + \alpha_Y \theta_{1, 2}^0;&#10;$$" src="./doc/formula/f3daeb6c33b0806fcf29cf6d0e08b651.svg" align="middle" width="428.44725pt" height="20.504055pt"/></p>
+
+- When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg" align="middle" width="35.800050000000006pt" height="21.683310000000006pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_w$" src="./doc/formula/6eb8e82173e2cfec99643fc2f2a8c895.svg" align="middle" width="62.640600000000006pt" height="22.831379999999992pt"/>,
+
+<p align="center"><img alt="$$&#10;\theta_{1, N_Y}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{1, N_Y}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, N_Y}^0 + \alpha_Y \theta_{1, N_Y - 1}^0 + 2\alpha_Y;&#10;$$" src="./doc/formula/55addc3670d500ee319fe41f78f99376.svg" align="middle" width="550.4383499999999pt" height="20.504055pt"/></p>
+
+- When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j = 1$" src="./doc/formula/99c0c04664ba70db8077b2b6415b2d85.svg" align="middle" width="37.847370000000005pt" height="21.683310000000006pt"/>, <img alt="$\theta_B = \theta_s = 0$" src="./doc/formula/3d8edabcee55caa0a40be072b5f54525.svg" align="middle" width="85.82903999999999pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_e$" src="./doc/formula/8ca4a9e038afebda2391d1a006780e78.svg" align="middle" width="59.058285000000005pt" height="22.831379999999992pt"/>,
+
+<p align="center"><img alt="$$&#10;\theta_{N_X, 1}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{N_X, 1}^0 + \alpha_X \theta_{N_X - 1, 1}^0 + \alpha_X \Delta X \phi_e + \alpha_Y \theta_{N_X, 2}^0;&#10;$$" src="./doc/formula/7e70bea11bda7f7102e4a07ea591673a.svg" align="middle" width="499.5276pt" height="20.504055pt"/></p>
+
+- When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_e$" src="./doc/formula/8ca4a9e038afebda2391d1a006780e78.svg" align="middle" width="59.058285000000005pt" height="22.831379999999992pt"/>,
+
+<p align="center"><img alt="$$&#10;\theta_{N_X, N_Y}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{N_X, N_Y}^0 + \alpha_X \theta_{N_X - 1, N_Y}^0 + \alpha_X \Delta X \phi_w + \alpha_Y \theta_{N_X, N_Y - 1}^0 + 2\alpha_Y.&#10;$$" src="./doc/formula/34d768573cbe68e017a8af0ac87da1c8.svg" align="middle" width="625.1008499999999pt" height="20.504055pt"/></p>
+
+Note that the explicit method is available only if the diffusion number <img alt="$\alpha_X + \alpha_Y \leq 0.5$" src="./doc/formula/32ecff65e2c1e6e5ca59f966453e56a3.svg" align="middle" width="107.92171500000002pt" height="21.18732pt"/>.
+
 
 ### Implicit Method
 
@@ -106,7 +155,7 @@ Soon...
 
 Considering that the Laplace equation is a kind of linear equation, the original equation and boundary conditions can be isolated to three parts <img alt="$\text{E}_1$" src="./doc/formula/278b90d99558726b26fb43f8def8b042.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/>, <img alt="$\text{E}_2$" src="./doc/formula/975aeec5482df93394e935220136a624.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> and <img alt="$\text{E}_3$" src="./doc/formula/f4983d931a0acb7db268de7692c60aff.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/>. Each part has only one non-homogeneous item in boundary conditions.
 
-<p align="center"><img alt="$$&#10;\text{E}_1\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_1}{\partial X^2} + \dfrac{\partial^2\theta_1}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_1}{\partial X}\right\vert_{X=L_x/L} = 0, \\&#10;    &amp; \left. \theta_1\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_1\right\vert_{Y=L_y/L} = 1.&#10;\end{aligned}&#10;\right. \quad &#10;\text{E}_2\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_2}{\partial X^2} + \dfrac{\partial^2\theta_2}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_2}{\partial X}\right\vert_{X=0} = -q_w^\ast, \\&#10;    &amp; \left. \dfrac{\partial \theta_2}{\partial X}\right\vert_{X=L_x/L} = 0, \\&#10;    &amp; \left. \theta_2\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_2\right\vert_{Y=L_y/L} = 0.&#10;\end{aligned}&#10;\right. \quad &#10;\text{E}_3\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_3}{\partial X^2} + \dfrac{\partial^2\theta_3}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_3}{\partial X}\right\vert_{X=0} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_3}{\partial X}\right\vert_{X=L_x/L} = q_e^\ast, \\&#10;    &amp; \left. \theta_3\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_3\right\vert_{Y=L_y/L} = 0.&#10;\end{aligned}&#10;\right.&#10;$$" src="./doc/formula/79ed6e5298c6363de2083aed4b7c0e8f.svg" align="middle" width="542.0877pt" height="185.56889999999999pt"/></p>
+<p align="center"><img alt="$$&#10;\text{E}_1\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_1}{\partial X^2} + \dfrac{\partial^2\theta_1}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_1}{\partial X}\right\vert_{X=L_x/L} = 0, \\&#10;    &amp; \left. \theta_1\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_1\right\vert_{Y=L_y/L} = 1.&#10;\end{aligned}&#10;\right. \quad &#10;\text{E}_2\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_2}{\partial X^2} + \dfrac{\partial^2\theta_2}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_2}{\partial X}\right\vert_{X=0} = -\phi_w, \\&#10;    &amp; \left. \dfrac{\partial \theta_2}{\partial X}\right\vert_{X=L_x/L} = 0, \\&#10;    &amp; \left. \theta_2\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_2\right\vert_{Y=L_y/L} = 0.&#10;\end{aligned}&#10;\right. \quad &#10;\text{E}_3\left\{&#10;\begin{aligned}&#10;    &amp; \dfrac{\partial^2\theta_3}{\partial X^2} + \dfrac{\partial^2\theta_3}{\partial Y^2} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_3}{\partial X}\right\vert_{X=0} = 0, \\&#10;    &amp; \left. \dfrac{\partial \theta_3}{\partial X}\right\vert_{X=L_x/L} = \phi_e, \\&#10;    &amp; \left. \theta_3\right\vert_{Y=0} = 0, \\&#10;    &amp; \left. \theta_3\right\vert_{Y=L_y/L} = 0.&#10;\end{aligned}&#10;\right.&#10;$$" src="./doc/formula/88f2fba908c9b1e141a21455b18dc50f.svg" align="middle" width="543.45555pt" height="185.56889999999999pt"/></p>
 
 Dimensionless temperature <img alt="$\theta$" src="./doc/formula/27e556cf3caa0673ac49a8f0de3c73ca.svg" align="middle" width="8.173588500000005pt" height="22.831379999999992pt"/> will be the addition of <img alt="$\theta_n$" src="./doc/formula/6198455ff8721b0169e94091580d971b.svg" align="middle" width="15.842970000000003pt" height="22.831379999999992pt"/>, <img alt="$\theta_2$" src="./doc/formula/f1fe0aebb1c952f09cdbfd83af41f50e.svg" align="middle" width="14.269530000000003pt" height="22.831379999999992pt"/> and <img alt="$\theta_3$" src="./doc/formula/ef3e4ae43ab69ed7bc41775203af5d03.svg" align="middle" width="14.269530000000003pt" height="22.831379999999992pt"/>. With **separate variable method**, <img alt="$\theta_i$" src="./doc/formula/f166369f3ef0a7ff052f1e9bbf57d2e2.svg" align="middle" width="12.367905000000004pt" height="22.831379999999992pt"/> (<img alt="$i \in\{1,2,3\}$" src="./doc/formula/347b6e009f0f84af572622332ca74e39.svg" align="middle" width="81.462315pt" height="24.65759999999998pt"/>) can be written as
 <p align="center"><img alt="$$&#10;\theta_i(X,Y) = F_i(X)G_i(Y),&#10;$$" src="./doc/formula/dc256a6a3214ac1cde8f0cffac3b5548.svg" align="middle" width="175.07325pt" height="16.438356pt"/></p>
@@ -146,9 +195,9 @@ When <img alt="$i = 2$" src="./doc/formula/85fb1bddc68e7fda92939c7099078e6b.svg"
 
 - If <img alt="$k_2 = 0$" src="./doc/formula/876182a1798ad933978e4954ac486cf4.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>, 
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\dfrac{\partial \theta_2}{\partial X}\right\vert_{X=0} = A_2^0 G_2 = -q_w^\ast &#10;\quad \Rightarrow \quad&#10;A_2^0 = -q_w^\ast\dfrac{1}{G_2}; \\[1.5em]&#10;\left.\dfrac{\partial \theta_2}{\partial X}\right\vert_{X=L_x/L} = A_2^0 G_2 = 0 &#10;\quad \Rightarrow \quad&#10;A_2^0 = 0.&#10;\end{array}&#10;$$" src="./doc/formula/2882d5f15651d6336697e73a658add5c.svg" align="middle" width="335.5704pt" height="97.562355pt"/></p>
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\dfrac{\partial \theta_2}{\partial X}\right\vert_{X=0} = A_2^0 G_2 = -\phi_w &#10;\quad \Rightarrow \quad&#10;A_2^0 = -\phi_w\dfrac{1}{G_2}; \\[1.5em]&#10;\left.\dfrac{\partial \theta_2}{\partial X}\right\vert_{X=L_x/L} = A_2^0 G_2 = 0 &#10;\quad \Rightarrow \quad&#10;A_2^0 = 0.&#10;\end{array}&#10;$$" src="./doc/formula/bce571583a2e40161f4117c1b457ec57.svg" align="middle" width="340.48245pt" height="97.562355pt"/></p>
 
-&ensp;&ensp;&ensp;&ensp;Considered that <img alt="$q_w^\ast \neq 0$" src="./doc/formula/bfc29217b945b02444144196a994ca8a.svg" align="middle" width="48.116475pt" height="22.831379999999992pt"/>, the equation of <img alt="$\text{E}_2$" src="./doc/formula/975aeec5482df93394e935220136a624.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> has no solution when <img alt="$k_2 = 0$" src="./doc/formula/876182a1798ad933978e4954ac486cf4.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>.
+&ensp;&ensp;&ensp;&ensp;Considered that <img alt="$\phi_w \neq 0$" src="./doc/formula/24f563b0a443a6cd2605ab5832da0342.svg" align="middle" width="50.572665pt" height="22.831379999999992pt"/>, the equation of <img alt="$\text{E}_2$" src="./doc/formula/975aeec5482df93394e935220136a624.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> has no solution when <img alt="$k_2 = 0$" src="./doc/formula/876182a1798ad933978e4954ac486cf4.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>.
 
 - If <img alt="$k_2 &gt; 0$" src="./doc/formula/e306bf4981c57add7aa42f5ae4370824.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>, 
 
@@ -166,7 +215,7 @@ When <img alt="$i = 2$" src="./doc/formula/85fb1bddc68e7fda92939c7099078e6b.svg"
 
 &ensp;&ensp;&ensp;&ensp;where <img alt="$n \in \mathbb{N}^+$" src="./doc/formula/65b9daa7d31517c726c6180d181d979d.svg" align="middle" width="51.921704999999996pt" height="26.177579999999978pt"/>. According to two other boundary conditions, 
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\displaystyle \sum_{n = 1}^\infty A_{2n}^- C_{2n}^- \dfrac{n \pi L}{L_y} \sin \dfrac{n \pi L}{L_y} Y = -q_w^\ast ; \\[1.5em]&#10;A_{2n}^- C_{2n}^- \cosh \dfrac{n \pi L_x}{L_y} + B_{2n}^- C_{2n}^- \sinh \dfrac{n \pi L_x}{L_y} = 0.&#10;\end{array}&#10;$$" src="./doc/formula/77e84c88c21542ab5cc75be215c6b906.svg" align="middle" width="322.9776pt" height="94.41036pt"/></p> 
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\displaystyle \sum_{n = 1}^\infty A_{2n}^- C_{2n}^- \dfrac{n \pi L}{L_y} \sin \dfrac{n \pi L}{L_y} Y = -\phi_w ; \\[1.5em]&#10;A_{2n}^- C_{2n}^- \cosh \dfrac{n \pi L_x}{L_y} + B_{2n}^- C_{2n}^- \sinh \dfrac{n \pi L_x}{L_y} = 0.&#10;\end{array}&#10;$$" src="./doc/formula/c7e868ea210ddcc868d583857b71f69a.svg" align="middle" width="322.9776pt" height="94.41036pt"/></p> 
 
 &ensp;&ensp;&ensp;&ensp;Moreover, based on the orthonormality of eigen equations, 
 
@@ -174,7 +223,7 @@ When <img alt="$i = 2$" src="./doc/formula/85fb1bddc68e7fda92939c7099078e6b.svg"
 
 &ensp;&ensp;&ensp;&ensp;where Kronecker <img alt="$\delta_{mn} = 1$" src="./doc/formula/5fd9ebd06338c08649bd35668daec549.svg" align="middle" width="58.05558pt" height="22.831379999999992pt"/> only if <img alt="$m = n$" src="./doc/formula/3e648cddc9684ebe5e7f9309f3a495fb.svg" align="middle" width="46.217655pt" height="14.155350000000013pt"/>, otherwise <img alt="$\delta_{mn} = 0$" src="./doc/formula/ffe3c3a74aaeaf8e07bff0cb12ed60bc.svg" align="middle" width="58.05558pt" height="22.831379999999992pt"/>. Then coefficients can be determined:
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;A_{2n}^- C_{2n}^- = -\dfrac{L_y q_w^\ast}{n \pi L} \displaystyle \int_0^1 \sin \dfrac{n \pi L}{L_y} Y \text{d} Y = &#10;\left\{ \begin{array}{ll}&#10;    -\dfrac{2 L_y^2 q_w^\ast}{(n \pi L)^2}, &amp; n = 2l - 1, \\[1em]&#10;    0, &amp; n=2l;&#10;\end{array}\right. \\[2em]&#10;B_{2n}^- C_{2n}^- = -A_{2n}^- C_{2n}^- \coth \dfrac{n \pi L_x}{L_y} = &#10;\left\{ \begin{array}{ll}&#10;\dfrac{2 L_y^2 q_w^\ast}{(n \pi L)^2} \cdot \coth \dfrac{n \pi L_x}{L_y}, &amp; n = 2l - 1, \\[1em]&#10;0, &amp; n = 2l.&#10;\end{array}\right.&#10;\end{array}&#10;$$" src="./doc/formula/80b313a2407d90960e788eeb34334d71.svg" align="middle" width="512.6434499999999pt" height="146.46686999999997pt"/></p>
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;A_{2n}^- C_{2n}^- = -\dfrac{L_y \phi_w}{n \pi L} \displaystyle \int_0^1 \sin \dfrac{n \pi L}{L_y} Y \text{d} Y = &#10;\left\{ \begin{array}{ll}&#10;    -\dfrac{2 L_y^2 \phi_w}{(n \pi L)^2}, &amp; n = 2l - 1, \\[1em]&#10;    0, &amp; n=2l;&#10;\end{array}\right. \\[2em]&#10;B_{2n}^- C_{2n}^- = -A_{2n}^- C_{2n}^- \coth \dfrac{n \pi L_x}{L_y} = &#10;\left\{ \begin{array}{ll}&#10;\dfrac{2 L_y^2 \phi_w}{(n \pi L)^2} \cdot \coth \dfrac{n \pi L_x}{L_y}, &amp; n = 2l - 1, \\[1em]&#10;0, &amp; n = 2l.&#10;\end{array}\right.&#10;\end{array}&#10;$$" src="./doc/formula/e06c7152f4f0808713106aab38901132.svg" align="middle" width="512.6434499999999pt" height="146.46686999999997pt"/></p>
 
 &ensp;&ensp;&ensp;&ensp;Where, <img alt="$l \in \mathbb{N}^+$" src="./doc/formula/6d5bfc1800766bd3e19d9b6e0495d639.svg" align="middle" width="47.283060000000006pt" height="26.177579999999978pt"/>. 
 
@@ -184,18 +233,19 @@ When <img alt="$i = 3$" src="./doc/formula/b8fe7a8f30cfdea91cd4bb99033d6e21.svg"
 
 as well as the coefficients of the equation are
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;A_{3n}^- C_{3n}^- = -\dfrac{L_y q_e^\ast}{n \pi L} \displaystyle \int_0^1 \sin \dfrac{n \pi L}{L_y} Y \text{d} Y = &#10;\left\{ \begin{array}{ll}&#10;    -\dfrac{2 L_y^2 q_e^\ast}{(n \pi L)^2}, &amp; n = 2l - 1, \\[1em]&#10;    0, &amp; n=2l;&#10;\end{array}\right. \\[2em]&#10;B_{3n}^- C_{3n}^- = -A_{3n}^- C_{3n}^- \coth \dfrac{n \pi L_x}{L_y} = &#10;\left\{ \begin{array}{ll}&#10;\dfrac{2 L_y^2 q_e^\ast}{(n \pi L)^2} \cdot \coth \dfrac{n \pi L_x}{L_y}, &amp; n = 2l - 1, \\[1em]&#10;0, &amp; n = 2l.&#10;\end{array}\right.&#10;\end{array}&#10;$$" src="./doc/formula/711a9171658317b771cd4b45898efcd2.svg" align="middle" width="512.6434499999999pt" height="146.46686999999997pt"/></p>
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;A_{3n}^- C_{3n}^- = -\dfrac{L_y \phi_e}{n \pi L} \displaystyle \int_0^1 \sin \dfrac{n \pi L}{L_y} Y \text{d} Y = &#10;\left\{ \begin{array}{ll}&#10;    -\dfrac{2 L_y^2 \phi_e}{(n \pi L)^2}, &amp; n = 2l - 1, \\[1em]&#10;    0, &amp; n=2l;&#10;\end{array}\right. \\[2em]&#10;B_{3n}^- C_{3n}^- = -A_{3n}^- C_{3n}^- \coth \dfrac{n \pi L_x}{L_y} = &#10;\left\{ \begin{array}{ll}&#10;\dfrac{2 L_y^2 \phi_e}{(n \pi L)^2} \cdot \coth \dfrac{n \pi L_x}{L_y}, &amp; n = 2l - 1, \\[1em]&#10;0, &amp; n = 2l.&#10;\end{array}\right.&#10;\end{array}&#10;$$" src="./doc/formula/06808d19d795eecffab150b67ff8c244.svg" align="middle" width="512.6434499999999pt" height="146.46686999999997pt"/></p>
 
 Where, <img alt="$l \in \mathbb{N}^+$" src="./doc/formula/6d5bfc1800766bd3e19d9b6e0495d639.svg" align="middle" width="47.283060000000006pt" height="26.177579999999978pt"/>. In conclusion, the analytical solution can be derived with **linear superposition principle**: 
 
 <p align="center"><img alt="$$&#10;\theta(X, Y) = \theta_1(X, Y) + \theta_2(X, Y) + \theta_3(X, Y).&#10;$$" src="./doc/formula/ec18ca9570ca10e8d387bc64d5079784.svg" align="middle" width="309.24629999999996pt" height="16.438356pt"/></p>
 
+Relative codes can be referred to [analytic.f90](analytic.f90). Non-dimensional temperature on each nodes as well as the contour is shown here.
 
-<!-- <p align="center">
-  <img width="260px" src="./doc/analytic_ctr.png"></img>
+<p align="center">
+  <img height="520px" src="./doc/analytic_ctr.png"></img>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img width="269px" src="./doc/analytic_dat.svg"></img>
-</p>  -->
+  <img height="520px" src="./doc/analytic_dat.png"></img>
+</p> 
 
 
 ## Reference
