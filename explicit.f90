@@ -1,101 +1,119 @@
+! =================================================
+!   Explicit method.
+! =================================================
+
 subroutine explicit
 
-    use params
+    use params 
     implicit none
 
     character(len=:), allocatable :: dir
-    real(kind=8) :: tic, toc
-    integer(kind=4) :: iter
-    real(kind=8) :: time, tau
-    real(kind=8) :: steady_err
-    integer(kind=4) :: I, J, P
+    real*8                        :: tic, toc
+    integer*4                     :: iter
+    real*8                        :: T0(Nx,Ny)
+    real*8                        :: T0_(Nx,Ny)
+    real*8                        :: a_x, a_y
+    real*8                        :: steady_err
+    real*8                        :: avg, std
+    integer*4                     :: I, J
 
-    write(*, '(A)') "Explicit Solver Starts!"
+    write(*, *) "Explicit Solver Starts!"
     call cpu_time(tic)
 
-    ! Temperature Initialization
+    ! Initialization
     call init()
-    dir = ".\\out\\explicit\\"
+
+    ! Check if output directory exists
+    iter = 0
+    dir  = ".\\out\\explicit\\"
     call checkdir(dir)
-    call visualize(dir, 0)
+    call output(dir, iter, "T", T)
+
+    ! Diffusion number judgement
+    a_x = tau_step/dx_**2
+    a_y = tau_step/dy_**2
+    if (a_x + a_y > 0.5) then
+        write(*, *) "Error: diffusion number exceeds."
+        write(*, *) "alpha=", a_x + a_y
+        return
+    end if
 
     ! Time Marching
-    tau = 0
-    iter = 0
-    dtau = alpha*dX**2
-    taumax = dtau*1000
-    do while (tau < taumax)
+    tau_ = 0
+    T0_  = T_
+    do while (tau_ < tau_max)
 
         iter = iter + 1
-        tau = tau + dtau
+        tau_ = tau_ + tau_step
         
-        ! Top Boundary
-        J = 1
-        do I = 2, N - 1
-            P = (I - 1)*N + J
-            theta(P) = theta(P+1)/3
+        ! Boundary conditions
+        T_(1,1)   = (1 - 2*a_x - 2*a_y)*T0_(1,1)   &
+            &     + a_x*dx_*qw_ + a_x*T0_(2,1)     &
+            &     + a_y*T0_(1,2)
+        T_(1,Ny)  = (1 - 2*a_x - 2*a_y)*T0_(1,Ny)  &
+            &     + a_x*dx_*qw_ + a_x*T0_(2,Ny)    &
+            &     + a_y*T0_(1,Ny-1) + a_y*2
+        T_(Nx,1)  = (1 - 2*a_x - 2*a_y)*T0_(Nx,1)  &
+            &     + a_x*T0_(Nx-1,1) + a_x*dx_*qe_  &
+            &     + a_y*T0_(Nx,2)
+        T_(Nx,Ny) = (1 - 2*a_x - 2*a_y)*T0_(Nx,Ny) &
+            &     + a_x*T0_(Nx-1,Ny) + a_x*dx_*qe_ &
+            &     + a_y*T0_(Nx,Ny-1) + a_y*2
+
+        ! do I = 2, Nx - 1
+        !     T_(I,1)  = T_(I,2)/3
+        !     T_(I,Ny) = T_(I,Ny-1)/3 + 2/3
+        ! end do
+
+        ! write(*,*) T_(:,Ny)
+        ! write(*,*) T_(:,Ny-1)
+        ! write(*,*) ""
+
+        do I = 2, Nx - 1
+            T_(I,1)  = 0
+            T_(I,Ny) = 1
         end do
 
-        ! Bottom Boundary
-        J = N
-        do I = 2, N - 1
-            P = (I - 1)*N + J
-            theta(P) = (theta(P-1) + 2)/3
+        do J = 2, Ny - 1
+            T_(1,J)  = (1 - a_x - 2*a_y)*T0_(1,J)      &
+                &    + a_x*(0.5*dx_*qw_ + T0_(2,J))    &
+                &    + a_y*(T0_(1,J-1) + T0_(1,J+1))
+            T_(Nx,J) = (1 - a_x - 2*a_y)*T0_(Nx,J)     &
+                &    + a_x*(T0_(Nx-1,J) + 0.5*dx_*qe_) &
+                &    + a_y*(T0_(Nx,J-1) + T0_(Nx,J+1))
         end do
-
-        ! Left Boundary
-        I = 1
-        do J = 2, N - 1
-            P = (I - 1)*N + J
-            theta(P) = alpha*(0.5*q_s*qw*dX + theta0(P+N) + theta0(P-1) + theta0(P+1)) + (1 - 3*alpha)*theta0(P)
-        end do
-
-        ! Right Boundary
-        I = N
-        do J = 2, N - 1
-            P = (I - 1)*N + J
-            theta(P) = alpha*(0.5*q_s*qe*dX + theta0(P-N) + theta0(P-1) + theta0(P+1)) + (1 - 3*alpha)*theta0(P)
-        end do
-        
-        ! Corners Boundary
-        I = 1; J = 1
-        P = (I - 1)*N + J
-        theta(P) = alpha*(q_s*qw*dX + theta0(P+N) + theta0(P+1)) + (1 - 4*alpha)*theta0(P)
-        I = 1; J = N
-        P = (I - 1)*N + J
-        theta(P) = alpha*(q_s*qw*dX + theta0(P+N) + theta0(P-1) + 2) + (1 - 4*alpha)*theta0(P)
-        I = N; J = 1
-        P = (I - 1)*N + J
-        theta(P) = alpha*(q_s*qe*dX + theta0(P-N) + theta0(P+1)) + (1 - 4*alpha)*theta0(P)
-        I = N; J = N
-        P = (I - 1)*N + J
-        theta(P) = alpha*(q_s*qe*dX + theta0(P-N) + theta0(P-1) + 2) + (1 - 4*alpha)*theta0(P)
 
         ! Interior
-        do I = 2, N - 1
-            do J = 2, N - 1
-                P = (I - 1)*N + J
-                theta(P) = alpha*(theta0(P-N) + theta0(P+N) + theta0(P-1) + theta0(P+1)) + (1 - 4*alpha)*theta0(P)
+        do I = 2, Nx - 1
+            do J = 2, Ny - 1
+                T_(I,J) = (1 - 2*a_x - 2*a_y)*T0_(I,J)  &
+                    &   + a_x*(T0_(I-1,J) + T0_(I+1,J)) &
+                    &   + a_y*(T0_(I,J-1) + T0_(I,J+1))
             end do
         end do
 
-        ! Dimensionless -> Dimension
-        time = tau*tau_s
-        T = theta*theta_s + T0
+        ! Dimensionalize & output
+        T = T_*(Tn - Ts) + Ts
+        call output(dir, iter, "T", T)
 
-        ! Temperature Visualization
-        call visualize(dir, iter)
-        
-        ! Steady Criteria
-        steady_err = maxval(abs(theta - theta0)/theta0)
-        write(*, '(A8, I4, A8, E12.4E2, A8, E12.4E2)') "Iter:", iter, "Time:", time, "Err:", steady_err
+        ! Steady criteria
+        call maxerr(Nx, Ny, T_, T0_, steady_err)
+        write(*, '(A8, I4, A8, E12.4E2)') &
+            & "Iter:", iter,  "Err:", steady_err
         if (steady_err < steady_cr) exit
-        theta0 = theta
+
+        ! Update
+        T0_ = T_
 
     end do
 
     call cpu_time(toc)
-    write(*, '(A)') "Explicit Solver Ends!"
-    write(*, '(A, F12.8, A, /)') "Time Consumed:", toc - tic, "s."
+    write(*, *) "Explicit Solver Ends!"
+    write(*, *) "Time Consumed:     ", toc - tic, "s."
+
+    call analytic(T0)
+    call cmperr(Nx, Ny, T, T0, avg, std)
+    write(*, *) "Average error:     ", avg
+    write(*, *) "Standard deviation:", std
 
 end subroutine

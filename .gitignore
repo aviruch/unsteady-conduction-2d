@@ -1,3 +1,12 @@
-# Ignore output files
-/out/analytic/*
-/out/explicit/*
+# Ignore VS Code config settings
+/.vscode
+
+# Ignore cmake output files
+/build
+
+# Ignore readme source file
+README_RAW.md
+
+# Ignore .sh or .bat conmands
+*.sh
+*.bat
