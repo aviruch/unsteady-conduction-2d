@@ -127,8 +127,15 @@ Four corners are the combination of Dirichlet's and Neumann's boundaries:
 
 <p align="center"><img alt="$$&#10;\theta_{N_X, N_Y}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{N_X, N_Y}^0 + \alpha_X \theta_{N_X - 1, N_Y}^0 + \alpha_X \Delta X \phi_w + \alpha_Y \theta_{N_X, N_Y - 1}^0 + 2\alpha_Y.&#10;$$" src="./doc/formula/34d768573cbe68e017a8af0ac87da1c8.svg" align="middle" width="625.1008499999999pt" height="20.504055pt"/></p>
 
-Note that the explicit method is available only if the diffusion number <img alt="$\alpha_X + \alpha_Y \leq 0.5$" src="./doc/formula/32ecff65e2c1e6e5ca59f966453e56a3.svg" align="middle" width="107.92171500000002pt" height="21.18732pt"/>.
+Note that the explicit method is available only if the diffusion number <img alt="$\alpha_X + \alpha_Y \leq 0.5$" src="./doc/formula/32ecff65e2c1e6e5ca59f966453e56a3.svg" align="middle" width="107.92171500000002pt" height="21.18732pt"/>. 
 
+Relative codes can be referred to [explicit.f90](explicit.f90). Non-dimensional temperature on each nodes as well as the contour is shown here. Compared with the analytical solution, the average value and the standard deviation of the relative error are respectively <img alt="$-1.256 \times 10^{-2}$" src="./doc/formula/4e566f6d17876819b64190b9d7d7cb29.svg" align="middle" width="103.58469pt" height="26.76201000000001pt"/> and <img alt="$5.119 \times 10^{-4}$" src="./doc/formula/688127a718ec21bfae60e8b0a6d4b77d.svg" align="middle" width="90.799335pt" height="26.76201000000001pt"/>.
+
+<p align="center">
+  <img height="520px" src="./doc/explicit_ctr.png"></img>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img height="520px" src="./doc/explicit_dat.png"></img>
+</p> 
 
 ### Implicit Method
 
