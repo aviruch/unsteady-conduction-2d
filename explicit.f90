@@ -60,18 +60,9 @@ subroutine explicit
             &     + a_x*T0_(Nx-1,Ny) + a_x*dx_*qe_ &
             &     + a_y*T0_(Nx,Ny-1) + a_y*2
 
-        ! do I = 2, Nx - 1
-        !     T_(I,1)  = T_(I,2)/3
-        !     T_(I,Ny) = T_(I,Ny-1)/3 + 2/3
-        ! end do
-
-        ! write(*,*) T_(:,Ny)
-        ! write(*,*) T_(:,Ny-1)
-        ! write(*,*) ""
-
         do I = 2, Nx - 1
-            T_(I,1)  = 0
-            T_(I,Ny) = 1
+            T_(I,1)  = T_(I,2)/3
+            T_(I,Ny) = T_(I,Ny-1)/3 + 2./3
         end do
 
         do J = 2, Ny - 1
