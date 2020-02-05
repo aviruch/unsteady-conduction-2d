@@ -36,8 +36,9 @@ module params
     real*8, parameter :: tau_max  = 1000.
 
     ! Convegence settings
-    real*8            :: omega     = 1.
-    real*8, parameter :: steady_cr = 1e-4
-    real*8, parameter :: conv_cr   = 1e-4
+    real*8               :: omega     = 1.
+    real*8,    parameter :: steady_cr = 1e-4
+    real*8,    parameter :: conv_cr   = 1e-4
+    integer*4, parameter :: conv_max  = 100
     
 end module
