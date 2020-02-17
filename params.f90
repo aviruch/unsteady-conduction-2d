@@ -16,8 +16,8 @@ module params
     real*8, parameter :: qe  = 800.
 
     ! Mesh settings 
-    integer*4, parameter :: Nx = 10
-    integer*4, parameter :: Ny = 15
+    integer*4, parameter :: Nx = 6
+    integer*4, parameter :: Ny = 9
 
     ! Time, space and temperature
     real*8                   :: dx, dy
