@@ -18,12 +18,10 @@ subroutine implicit
     real*8                        :: T_1d(Nx*Ny)
     real*8                        :: steady_err
     real*8                        :: avg, std
-    integer*4                     :: I, J
-
-    write(*, *) "Implicit Solver Starts!"
-    call cpu_time(tic)
+    integer*4                     :: I, J, P
 
     ! Initialization
+    call cpu_time(tic)
     call init()
 
     ! Check if output directory exists
@@ -45,20 +43,18 @@ subroutine implicit
         tau_ = tau_ + tau_step
 
         ! Iteration
-        call vec1d(T0_, T_1d)
-        call getAb(A, b, T_1d, a_x, a_y)
+        call getAb(A, b, T0_, a_x, a_y)
         call iter_ja_p(Nx*Ny, A, b, T_1d, &
             & conv_cr, conv_max)
-        call mat2d(T_1d, T_)
 
-        ! do J = 1, Nx*Ny
-        !     write(*,*) A(:,J)
-        ! end do
-        ! write(*,*) ""
-
-        ! do J = 1, Ny
-        !     write(*,*) T_(:,J)
-        ! end do
+        ! Vector -> Matrix
+        P = 0
+        do I = 1, Nx
+            do J = 1, Ny
+                P = P + 1
+                T_(I,J) = T_1d(P)
+            end do
+        end do
 
         ! Dimensionalize & output
         T = T_*(Tn - Ts) + Ts
@@ -66,73 +62,36 @@ subroutine implicit
 
         ! Steady criteria
         call maxerr(Nx, Ny, T_, T0_, steady_err)
-        write(*, '(A8, I4, A8, E12.4E2)') &
+        write(*, "(A5, I4, A8, E12.4E2)") &
             & "Iter:", iter,  "Err:", steady_err
         if (steady_err < steady_cr) exit
 
         ! Update
         T0_ = T_
 
-        ! stop
-
     end do
 
+    ! Print time consumption
+    write(*, "(A20)") ""
+    write(*, "(A20)") "Converged!          "
     call cpu_time(toc)
-    write(*, *) "Implicit Solver Ends!"
-    write(*, *) "Time Consumed:     ", toc - tic, "s."
+    write(*, "(A20, F8.3, A2)") &
+        & "Time consumed:      ", toc - tic, "s."
+    write(*, "(A20)") ""
 
+    ! Print numerical solution
+    write(*, "(A20)") "Numerical solution: "
+    call print(T_)
+    write(*, "(A20)") ""
+
+    ! Print analytical solution
+    write(*, "(A20)") "Analytical solution:"
     call analytic(T0)
     call cmperr(Nx, Ny, T, T0, avg, std)
-    write(*, *) "Average error:     ", avg
-    write(*, *) "Standard deviation:", std
-
-end subroutine
-
-
-! =================================================
-!   Vectorize 2d array to 1d array.
-! =================================================
-
-subroutine vec1d(x2d, x1d)
-
-    use params, only: Nx, Ny
-    implicit none
-
-    real*8, intent(in)  :: x2d(Nx,Ny)
-    real*8, intent(out) :: x1d(Nx*Ny)
-    integer*4           :: I, J, P
-
-    P = 0
-    do I = 1, Nx
-        do J = 1, Ny
-            P = P + 1
-            x1d(P) = x2d(I,J) 
-        end do
-    end do
-
-end subroutine
-
-
-! =================================================
-!   Turn vectorized 1d array back to 2d array.
-! =================================================
-
-subroutine mat2d(x1d, x2d)
-
-    use params, only: Nx, Ny
-    implicit none
-
-    real*8, intent(in)  :: x1d(Nx*Ny)
-    real*8, intent(out) :: x2d(Nx,Ny)
-    integer*4           :: I, J, P
-
-    P = 0
-    do I = 1, Nx
-        do J = 1, Ny
-            P = P + 1
-            x2d(I,J) = x1d(P)
-        end do
-    end do
+    call print((T0 - Ts)/(Tn - Ts))
+    write(*, "(A20)") ""
+    write(*, "(A20, E12.4E2)") "Average error:      ", avg
+    write(*, "(A20, E12.4E2)") "Standard deviation: ", std
 
 end subroutine
 
@@ -189,7 +148,7 @@ subroutine getAb(A, b, x0, a_x, a_y)
         A(P,P-Ny) = -a_x
         A(P,P+Ny) = -a_x
         A(P,P-1)  = -a_y
-        b(P)      = x0(Nx,Ny)
+        b(P)      = x0(I,1)
     end do
 
     J = Ny
@@ -199,7 +158,7 @@ subroutine getAb(A, b, x0, a_x, a_y)
         A(P,P-Ny) = -a_x
         A(P,P+Ny) = -a_x
         A(P,P+1)  = -a_y
-        b(P)      = x0(Nx,Ny) + 2*a_y
+        b(P)      = x0(I,Ny) + 2*a_y
     end do
 
     I = 1
@@ -233,53 +192,6 @@ subroutine getAb(A, b, x0, a_x, a_y)
             A(P,P+1)  = -a_y
             b(P)      = x0(I,J)
         end do
-    end do
-
-end subroutine
-
-
-! =================================================
-!   Jocobi iteration (point) method to solve linear 
-!       equation system 'Ax = b'.
-! =================================================
-
-subroutine iter_ja_p(n, A, b, x, iter_cr, iter_max)
-
-    implicit none
-
-    integer*4, intent(in)    :: n
-    real*8,    intent(in)    :: A(n,n)
-    real*8,    intent(in)    :: b(n)
-    real*8,    intent(inout) :: x(n)
-    real*8,    intent(in)    :: iter_cr
-    integer*4, intent(in)    :: iter_max
-
-    real*8    :: x0(n)
-    real*8    :: iter_err, tmp
-    integer*4 :: iter_cnt
-    integer*4 :: I, J
-
-    x0 = x
-    iter_cnt = 1
-    do while (iter_cnt < iter_max)
-
-        do I = 1, n
-            tmp = 0.
-            do J = 1, n
-                if (J /= I) then
-                    tmp = tmp + A(I,J)*x0(J)
-                end if
-            end do
-            x(I) = (b(I) - tmp)/A(I,I)
-        end do
-
-        iter_err = maxval(abs(x - x0)/x0)
-        write(*,*) iter_cnt, iter_err
-        if (iter_err < iter_cr) exit
-
-        x0 = x
-        iter_cnt = iter_cnt + 1
-
     end do
 
 end subroutine

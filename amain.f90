@@ -6,6 +6,7 @@ program main
 
     implicit none
 
-    call implicit() 
+    call explicit() 
+    ! call implicit() 
     
 end program

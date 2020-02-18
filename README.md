@@ -93,49 +93,55 @@ Bottom and top sides are Dirichlet's boundaries, where non-dimensional temperatu
 
 - When <img alt="$i \neq 1$" src="./doc/formula/573091b03bafd592cd7acd78b9fbd635.svg" align="middle" width="35.800050000000006pt" height="22.831379999999992pt"/> or <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/>, <img alt="$j = 1$" src="./doc/formula/99c0c04664ba70db8077b2b6415b2d85.svg" align="middle" width="37.847370000000005pt" height="21.683310000000006pt"/>, <img alt="$\theta_B = \theta_s = 0$" src="./doc/formula/3d8edabcee55caa0a40be072b5f54525.svg" align="middle" width="85.82903999999999pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\frac{\theta_{i, 1} - \theta_B}{\Delta Y / 2} = \frac{\theta_{i, 2} - \theta_B}{3\Delta Y / 2} &#10;\quad \Rightarrow \quad &#10;\theta_{i, 1} = \frac{1}{3} \theta_{i, 2}; &#10;$$" src="./doc/formula/3bcc796d212ac5350e7537dfe75b7838.svg" align="middle" width="297.7623pt" height="37.92162pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{i, 1} = (1 - 2 \alpha_X - 3 \alpha_Y) \theta_{i, 1}^0 + \alpha_X \theta_{i - 1, 1}^0 + \alpha_X \theta_{i + 1, 1}^0 + \alpha_Y \theta_{i, 2}^0; &#10;$$" src="./doc/formula/b98344c36afd890c55a1fe08c4bf6788.svg" align="middle" width="428.91419999999994pt" height="20.504055pt"/></p>
 
 - When <img alt="$i \neq 1$" src="./doc/formula/573091b03bafd592cd7acd78b9fbd635.svg" align="middle" width="35.800050000000006pt" height="22.831379999999992pt"/> or <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\frac{\theta_{i, N_Y} - \theta_B}{\Delta Y / 2} = \frac{\theta_{i, N_Y - 1} - \theta_B}{3 \Delta Y / 2} &#10;\quad \Rightarrow \quad&#10;\theta_{i, N_Y} = \frac{1}{3} \theta_{i, N_Y - 1} + \frac{2}{3}.&#10;$$" src="./doc/formula/2d9daca071c442ee33c5508c2b924585.svg" align="middle" width="418.62975pt" height="37.92162pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{i, N_Y} = (1 - 2 \alpha_X - 3 \alpha_Y) \theta_{i, N_Y}^0 + \alpha_X \theta_{i - 1, N_Y}^0 + \alpha_X \theta_{i + 1, N_Y}^0 + \alpha_Y \theta_{i, N_Y - 1}^0 + 2 \alpha_Y. &#10;$$" src="./doc/formula/369ce68b5b2581d103df3c18f4569e7b.svg" align="middle" width="564.64485pt" height="20.504055pt"/></p>
 
 Left and right sides are Neumann's boundaries, where non-dimensional heat flux <img alt="$\phi_B$" src="./doc/formula/8216311d8816a6198c9522ae9d7abbc0.svg" align="middle" width="20.287245000000002pt" height="22.831379999999992pt"/> is introduced: 
 
 - When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg" align="middle" width="35.800050000000006pt" height="21.683310000000006pt"/>, <img alt="$j \neq 1$" src="./doc/formula/ba27f6e293029d5bbf4188faa7b0598c.svg" align="middle" width="37.847370000000005pt" height="22.831379999999992pt"/> or <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/>, <img alt="$\phi_B = 2(\theta_B - \theta_{1, j}) / \Delta X = \phi_w$" src="./doc/formula/e41d1f1c2de897c472fd2e43375cce22.svg" align="middle" width="206.61250499999997pt" height="24.65759999999998pt"/>, 
 
-<p align="center"><img alt="$$&#10;\theta_{1, j} = (1 - \alpha_X - 2\alpha_Y) \theta_{1, j}^0 + \frac{\alpha_X}{2} \Delta X \phi_w + \alpha_X \theta_{2, j}^0 + \alpha_Y \theta_{1, j - 1}^0 + \alpha_Y \theta_{1, j + 1}^0; &#10;$$" src="./doc/formula/361d069d8354e412cd701e03939b6315.svg" align="middle" width="522.9378pt" height="29.474114999999998pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{1, j} = (1 - \alpha_X - 2\alpha_Y) \theta_{1, j}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, j}^0 + \alpha_Y \theta_{1, j - 1}^0 + \alpha_Y \theta_{1, j + 1}^0; &#10;$$" src="./doc/formula/10ea0090e0138c16f663f5206d59990c.svg" align="middle" width="518.9926499999999pt" height="20.504055pt"/></p>
 
 - When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j \neq 1$" src="./doc/formula/ba27f6e293029d5bbf4188faa7b0598c.svg" align="middle" width="37.847370000000005pt" height="22.831379999999992pt"/> or <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/>, <img alt="$\phi_B = 2(\theta_B - \theta_{N_X, j}) / \Delta X = \phi_e$" src="./doc/formula/3a40dc2713a8f763af89d563dcd422f9.svg" align="middle" width="217.489305pt" height="24.65759999999998pt"/>, 
 
-<p align="center"><img alt="$$&#10;\theta_{N_X, j} = (1 - \alpha_X - 2\alpha_Y) \theta_{N_X, j}^0 + \alpha_X \theta_{N_X - 1, j}^0 + \frac{\alpha_X}{2} \Delta X \phi_e + \alpha_Y \theta_{N_X, j - 1}^0 + \alpha_Y \theta_{N_X, j + 1}^0. &#10;$$" src="./doc/formula/8e38d1e95ad608aae7ef3b508647c2a7.svg" align="middle" width="608.4771pt" height="29.474114999999998pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{N_X, j} = (1 - \alpha_X - 2\alpha_Y) \theta_{N_X, j}^0 + \alpha_X \theta_{N_X - 1, j}^0 + \alpha_X \Delta X \phi_e + \alpha_Y \theta_{N_X, j - 1}^0 + \alpha_Y \theta_{N_X, j + 1}^0. &#10;$$" src="./doc/formula/f08aee9825046fb2779d9597febeb32c.svg" align="middle" width="604.5319499999999pt" height="20.504055pt"/></p>
 
 Four corners are the combination of Dirichlet's and Neumann's boundaries: 
 
 - When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg" align="middle" width="35.800050000000006pt" height="21.683310000000006pt"/>, <img alt="$j = 1$" src="./doc/formula/99c0c04664ba70db8077b2b6415b2d85.svg" align="middle" width="37.847370000000005pt" height="21.683310000000006pt"/>, <img alt="$\theta_B = \theta_s = 0$" src="./doc/formula/3d8edabcee55caa0a40be072b5f54525.svg" align="middle" width="85.82903999999999pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_w$" src="./doc/formula/6eb8e82173e2cfec99643fc2f2a8c895.svg" align="middle" width="62.640600000000006pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\theta_{1, 1}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{1, 1}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, 1}^0 + \alpha_Y \theta_{1, 2}^0;&#10;$$" src="./doc/formula/f3daeb6c33b0806fcf29cf6d0e08b651.svg" align="middle" width="428.44725pt" height="20.504055pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{1, 1}&#10;= (1 - \alpha_X - 3\alpha_Y) \theta_{1, 1}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, 1}^0 + \alpha_Y \theta_{1, 2}^0;&#10;$$" src="./doc/formula/acd4b2f8380386879e412571d8864856.svg" align="middle" width="420.22695pt" height="20.504055pt"/></p>
 
 - When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg" align="middle" width="35.800050000000006pt" height="21.683310000000006pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_w$" src="./doc/formula/6eb8e82173e2cfec99643fc2f2a8c895.svg" align="middle" width="62.640600000000006pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\theta_{1, N_Y}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{1, N_Y}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, N_Y}^0 + \alpha_Y \theta_{1, N_Y - 1}^0 + 2\alpha_Y;&#10;$$" src="./doc/formula/55addc3670d500ee319fe41f78f99376.svg" align="middle" width="550.4383499999999pt" height="20.504055pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{1, N_Y}&#10;= (1 - \alpha_X - 3\alpha_Y) \theta_{1, N_Y}^0 + \alpha_X \Delta X \phi_w + \alpha_X \theta_{2, N_Y}^0 + \alpha_Y \theta_{1, N_Y - 1}^0 + 2\alpha_Y;&#10;$$" src="./doc/formula/177efed66678b6afb0fba3806a6a71f6.svg" align="middle" width="542.2197pt" height="20.504055pt"/></p>
 
 - When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j = 1$" src="./doc/formula/99c0c04664ba70db8077b2b6415b2d85.svg" align="middle" width="37.847370000000005pt" height="21.683310000000006pt"/>, <img alt="$\theta_B = \theta_s = 0$" src="./doc/formula/3d8edabcee55caa0a40be072b5f54525.svg" align="middle" width="85.82903999999999pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_e$" src="./doc/formula/8ca4a9e038afebda2391d1a006780e78.svg" align="middle" width="59.058285000000005pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\theta_{N_X, 1}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{N_X, 1}^0 + \alpha_X \theta_{N_X - 1, 1}^0 + \alpha_X \Delta X \phi_e + \alpha_Y \theta_{N_X, 2}^0;&#10;$$" src="./doc/formula/7e70bea11bda7f7102e4a07ea591673a.svg" align="middle" width="499.5276pt" height="20.504055pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{N_X, 1}&#10;= (1 - \alpha_X - 3\alpha_Y) \theta_{N_X, 1}^0 + \alpha_X \theta_{N_X - 1, 1}^0 + \alpha_X \Delta X \phi_e + \alpha_Y \theta_{N_X, 2}^0;&#10;$$" src="./doc/formula/62e7413b2ec9b1adc2c0fb35c9b19ebb.svg" align="middle" width="491.3073pt" height="20.504055pt"/></p>
 
 - When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_e$" src="./doc/formula/8ca4a9e038afebda2391d1a006780e78.svg" align="middle" width="59.058285000000005pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\theta_{N_X, N_Y}&#10;= (1 - 2\alpha_X - 2\alpha_Y) \theta_{N_X, N_Y}^0 + \alpha_X \theta_{N_X - 1, N_Y}^0 + \alpha_X \Delta X \phi_e + \alpha_Y \theta_{N_X, N_Y - 1}^0 + 2\alpha_Y.&#10;$$" src="./doc/formula/a73b2a5a2723051cd0e9b6c792317130.svg" align="middle" width="621.5187pt" height="20.504055pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_{N_X, N_Y}&#10;= (1 - \alpha_X - 3\alpha_Y) \theta_{N_X, N_Y}^0 + \alpha_X \theta_{N_X - 1, N_Y}^0 + \alpha_X \Delta X \phi_e + \alpha_Y \theta_{N_X, N_Y - 1}^0 + 2\alpha_Y.&#10;$$" src="./doc/formula/c431a72bbdcf2e3b973a04b072564a9a.svg" align="middle" width="613.3000499999999pt" height="20.504055pt"/></p>
 
 Note that the explicit method is available only if the diffusion number <img alt="$\alpha_X + \alpha_Y \leq 0.5$" src="./doc/formula/32ecff65e2c1e6e5ca59f966453e56a3.svg" align="middle" width="107.92171500000002pt" height="21.18732pt"/>. 
 
-Relative codes can be referred to [explicit.f90](explicit.f90). Non-dimensional temperature on each nodes as well as the contour is shown here. Compared with the analytical solution, the average value and the standard deviation of the relative error are respectively <img alt="$-1.256 \times 10^{-2}$" src="./doc/formula/4e566f6d17876819b64190b9d7d7cb29.svg" align="middle" width="103.58469pt" height="26.76201000000001pt"/> and <img alt="$5.119 \times 10^{-4}$" src="./doc/formula/688127a718ec21bfae60e8b0a6d4b77d.svg" align="middle" width="90.799335pt" height="26.76201000000001pt"/>.
+Relative codes can be referred to [explicit.f90](explicit.f90). 
+
+<!-- 
+
+Non-dimensional temperature on each nodes as well as the contour is shown here. Compared with the analytical solution, the average value and the standard deviation of the relative error are respectively <img alt="$-1.256 \times 10^{-2}$" src="./doc/formula/4e566f6d17876819b64190b9d7d7cb29.svg" align="middle" width="103.58469pt" height="26.76201000000001pt"/> and <img alt="$5.119 \times 10^{-4}$" src="./doc/formula/688127a718ec21bfae60e8b0a6d4b77d.svg" align="middle" width="90.799335pt" height="26.76201000000001pt"/>.
 
 <p align="center">
   <img height="520px" src="./doc/explicit_ctr.png"></img>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img height="520px" src="./doc/explicit_dat.png"></img>
-</p> 
+</p>  
+
+-->
 
 ### Implicit Method
 
