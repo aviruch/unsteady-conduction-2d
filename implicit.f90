@@ -44,7 +44,9 @@ subroutine implicit
 
         ! Iteration
         call getAb(A, b, T0_, a_x, a_y)
-        call iter_ja_p(Nx*Ny, A, b, T_1d, &
+        ! call iter_ja_p(Nx*Ny, A, b, T_1d, &
+        !     & conv_cr, conv_max)
+        call iter_gs_p(Nx*Ny, A, b, T_1d, &
             & conv_cr, conv_max)
 
         ! Vector -> Matrix
