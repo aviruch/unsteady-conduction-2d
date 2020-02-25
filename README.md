@@ -31,15 +31,15 @@ This repository gives Fortran 90 codes to solve two-dimensional unsteady heat co
 - Clone this repository using [Git](https://git-scm.com/).
 
 ```
-$ git clone https://github.com/Arsennnic/unsteady-conduction-2d.git
+git clone https://github.com/Arsennnic/unsteady-conduction-2d.git
 ```
 
 - Compile with [CMake](https://cmake.org/) and [MinGW](http://www.mingw.org/).
 ```
-$ cd unsteady-conduction-2d/
-$ cmake -G "MinGW Makefiles" -B build/
-$ cd build/
-$ mingw32-make
+cd unsteady-conduction-2d/
+cmake -G "MinGW Makefiles" -B build/
+cd build/
+mingw32-make
 ```
 
 ## Problem Definition
@@ -221,7 +221,21 @@ where <img alt="$\theta^{(k)}$" src="./doc/formula/919cf38c70a1f2cf163309261dcb6
 
 #### Gauss-Seidel Iteration (Point)
 
-Soon...
+Square matrix <img alt="$\mathbf{A}$" src="./doc/formula/96458543dc5abd380904d95cae6aa2bc.svg" align="middle" width="14.292300000000003pt" height="22.557149999999986pt"/> can be decomposed into its lower triangular component <img alt="$\mathbf{L_\ast}$" src="./doc/formula/0bc7c34ea269f7f68091dcab926d65da.svg" align="middle" width="18.105120000000003pt" height="22.557149999999986pt"/>, and its strictly upper triangular component <img alt="$\mathbf{U}$" src="./doc/formula/35531be55273dc37ee90083451d089ff.svg" align="middle" width="14.543430000000004pt" height="22.557149999999986pt"/>:
+
+<p align="center"><img alt="$$&#10;\mathbf{A} = \mathbf{L_\ast} + \mathbf{U},&#10;$$" src="./doc/formula/46269c08f5a760b6c772286d9a6f62e3.svg" align="middle" width="94.33743pt" height="14.474889pt"/></p>
+
+where,
+
+<p align="center"><img alt="$$&#10;\mathbf{L_\ast} = \left[&#10;\begin{matrix}&#10;a_{11} &amp; 0 &amp; \cdots &amp; 0 \\&#10;a_{21} &amp; a_{22} &amp; \cdots &amp; 0 \\&#10;\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\&#10;a_{n1} &amp; a_{n2} &amp; \cdots &amp; a_{nn}&#10;\end{matrix}\right], \quad&#10;\mathbf{U} = \left[&#10;\begin{matrix}&#10;0 &amp; a_{12} &amp; \cdots &amp; a_{1n} \\&#10;0 &amp; 0 &amp; \cdots &amp; a_{2n} \\&#10;\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\&#10;0 &amp; 0 &amp; \cdots &amp; 0&#10;\end{matrix}\right].&#10;$$" src="./doc/formula/239aba86f0d3c9d83a6ebf6d7fc2e7a6.svg" align="middle" width="426.56295pt" height="88.76801999999999pt"/></p>
+
+The solution is then obtained iteratively via 
+
+<p align="center"><img alt="$$&#10;\theta^{(k+1)} = \mathbf{L_\ast}^{-1} \left( b - \mathbf{U} \theta^{(k)} \right),&#10;$$" src="./doc/formula/4a87469744018e2d03d298c52a3442d5.svg" align="middle" width="199.57739999999998pt" height="29.589285pt"/></p>
+
+Thus the element-based formula is 
+
+<p align="center"><img alt="$$&#10;\theta_p^{(k+1)} = \frac{1}{a_{pp}} \left( b_p - \sum_{q = 1}^{p - 1} a_{pq} \theta_q^{(k + 1)} - \sum_{q = p + 1}^{n} a_{pq} \theta_q^{(k)} \right), \quad p \in \left\{ 1, 2, \ldots , n \right\}.&#10;$$" src="./doc/formula/9f43245120a3674f3c1ccf2eab3437c7.svg" align="middle" width="508.77750000000003pt" height="50.20125pt"/></p>
 
 #### Jacobi Iteration (Line)
 
