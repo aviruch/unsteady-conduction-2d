@@ -15,7 +15,7 @@ subroutine iter_gs_p(n, A, b, x, iter_cr, iter_max)
     integer*4, intent(in)    :: iter_max
 
     real*8    :: x0(n)
-    real*8    :: iter_err, tmp1, tmp2
+    real*8    :: iter_err, tmp
     integer*4 :: iter_cnt
     integer*4 :: I, J
 
@@ -24,15 +24,14 @@ subroutine iter_gs_p(n, A, b, x, iter_cr, iter_max)
     do while (iter_cnt < iter_max)
 
         do I = 1, n
-            tmp1 = 0.
+            tmp = 0.
             do J = 1, I - 1
-                tmp1 = tmp1 + A(I,J)*x(J)
+                tmp = tmp + A(I,J)*x(J)
             end do
-            tmp2 = 0.
             do J = I + 1, n
-                tmp2 = tmp2 + A(I,J)*x0(J)
+                tmp = tmp + A(I,J)*x0(J)
             end do
-            x(I) = (b(I) - tmp1 - tmp2)/A(I,I)
+            x(I) = (b(I) - tmp)/A(I,I)
         end do
 
         iter_err = maxval(abs(x - x0)/x0)

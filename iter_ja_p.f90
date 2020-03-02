@@ -25,10 +25,11 @@ subroutine iter_ja_p(n, A, b, x, iter_cr, iter_max)
 
         do I = 1, n
             tmp = 0.
-            do J = 1, n
-                if (J /= I) then
-                    tmp = tmp + A(I,J)*x0(J)
-                end if
+            do J = 1, I - 1
+                tmp = tmp + A(I,J)*x(J)
+            end do
+            do J = I + 1, n
+                tmp = tmp + A(I,J)*x(J)
             end do
             x(I) = (b(I) - tmp)/A(I,I)
         end do

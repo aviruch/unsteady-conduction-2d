@@ -42,8 +42,10 @@ subroutine implicit
         iter = iter + 1
         tau_ = tau_ + tau_step
 
-        ! Iteration
+        ! Initialize matrix 'A' and vector 'b'
         call getAb(A, b, T0_, a_x, a_y)
+
+        ! Iteration: Jacobi / Gauss-Seidel
         ! call iter_ja_p(Nx*Ny, A, b, T_1d, &
         !     & conv_cr, conv_max)
         call iter_gs_p(Nx*Ny, A, b, T_1d, &

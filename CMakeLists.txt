@@ -9,4 +9,4 @@ set(CMAKE_VERBOSE_MAKEFILE TRUE)
 file(GLOB_RECURSE SRCS RELATIVE ${PROJECT_SOURCE_DIR} *.f90)
 
 # Compile
-add_executable(amain amain.f90 ${SRCS})
+add_executable(_main _main.f90 ${SRCS})

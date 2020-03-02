@@ -18,10 +18,10 @@ This repository gives Fortran 90 codes to solve two-dimensional unsteady heat co
 - [Numerical Solution](#numerical-solution)
     + [Explicit Method](#explicit-method)
     + [Implicit Method](#implicit-method)
-        - [Jacobi Iteration (Point)](#jacobi-iteration-point)
-        - [Gauss-Seidel Iteration (Point)](#gauss-seidel-iteration-point)
-        - [Jacobi Iteration (Line)](#jacobi-iteration-line)
-        - [Gauss-Seidel Iteration (Line)](#gauss-seidel-iteration-line)
+        - [Jacobi Iteration](#jacobi-iteration)
+        - [Gauss-Seidel Iteration](#gauss-seidel-iteration)
+        - [Jacobi Iteration (Block) + TDMA Algorithm](#jacobi-iteration-block-tdma-algorithm)
+        - [Gauss-Seidel Iteration (Block) + TDMA Algorithm](#gauss-seidel-iteration-block-tdma-algorithm)
 - [Analytical Solution](#analytical-solution)
 - [Reference](#reference)
 - [License](#license)
@@ -191,7 +191,7 @@ Four corners are the combination of Dirichlet's and Neumann's boundaries:
 
 - When <img alt="$i = N_X$" src="./doc/formula/f485c01952121672df0977bd2fd855f1.svg" align="middle" width="52.46339999999999pt" height="22.46574pt"/>, <img alt="$j = N_Y$" src="./doc/formula/7b78010d1a89d4144b8b19092fa058c0.svg" align="middle" width="53.394165pt" height="22.46574pt"/>, <img alt="$\theta_B = \theta_n = 1$" src="./doc/formula/4aa03f5fa64a9e288ee61dd524b16e5a.svg" align="middle" width="87.750795pt" height="22.831379999999992pt"/>, <img alt="$\phi_B = \phi_e$" src="./doc/formula/8ca4a9e038afebda2391d1a006780e78.svg" align="middle" width="59.058285000000005pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;(1 + \alpha_X + 3\alpha_Y) \theta_{N_X, N_Y} - \alpha_X \theta_{N_X - 1, N_Y} - \alpha_Y \theta_{N_X, N_Y - 1}&#10;= \theta_{N_X, N_Y}^0 + \alpha_X \Delta X \phi_e + 2\alpha_Y.&#10;$$" src="./doc/formula/db1f97c9b9c58fa48edfb89996510566.svg" align="middle" width="613.3000499999999pt" height="20.504055pt"/></p> 
+<p align="center"><img alt="$$&#10;(1 + \alpha_X + 3\alpha_Y) \theta_{N_X, N_Y} - \alpha_X \theta_{N_X - 1, N_Y} - \alpha_Y \theta_{N_X, N_Y - 1}&#10;= \theta_{N_X, N_Y}^0 + \alpha_X \Delta X \phi_e + 2\alpha_Y.&#10;$$" src="./doc/formula/db1f97c9b9c58fa48edfb89996510566.svg" align="middle" width="613.3000499999999pt" height="20.504055pt"/></p>
 
 Therefore, <img alt="$n$" src="./doc/formula/55a049b8f161ae7cfeb0197d75aff967.svg" align="middle" width="9.867000000000003pt" height="14.155350000000013pt"/> equations form a system of linear equations, which can also be represented in matrix
 
@@ -201,7 +201,7 @@ where <img alt="$\mathbf{A}$" src="./doc/formula/96458543dc5abd380904d95cae6aa2b
 
 The task to be done, is to solve this system of linear equations. Different iterative methods are supported.
 
-#### Jacobi Iteration (Point)
+#### Jacobi Iteration
 
 Square matrix <img alt="$\mathbf{A}$" src="./doc/formula/96458543dc5abd380904d95cae6aa2bc.svg" align="middle" width="14.292300000000003pt" height="22.557149999999986pt"/> can be decomposed into a diagonal component <img alt="$\mathbf{D}$" src="./doc/formula/17104becada06c6cda0447c33ec6c846.svg" align="middle" width="14.497725000000003pt" height="22.557149999999986pt"/>, and the remainder <img alt="$\mathbf{R}$" src="./doc/formula/6423e0d54c2545769ad013e5f6a4cf94.svg" align="middle" width="14.178120000000003pt" height="22.557149999999986pt"/>: 
 
@@ -217,9 +217,9 @@ The solution is then obtained iteratively via
 
 where <img alt="$\theta^{(k)}$" src="./doc/formula/919cf38c70a1f2cf163309261dcb6d3e.svg" align="middle" width="25.713600000000003pt" height="29.19113999999999pt"/> is the <img alt="$k$" src="./doc/formula/63bb9849783d01d91403bc9a5fea12a2.svg" align="middle" width="9.075495000000004pt" height="22.831379999999992pt"/>-th approximation or iteration of vector <img alt="$\theta$" src="./doc/formula/27e556cf3caa0673ac49a8f0de3c73ca.svg" align="middle" width="8.173588500000005pt" height="22.831379999999992pt"/>. Thus the element-based formula is 
 
-<p align="center"><img alt="$$&#10;\theta_p^{(k+1)} = \frac{1}{a_{pp}} \left( b_p - \sum_{q \neq p}a_{pq} \theta_q^{(k)} \right), \quad p, q \in \left\{ 1, 2, \ldots , n \right\}.&#10;$$" src="./doc/formula/fc6137e37e6cbd64290689fa30b1bb93.svg" align="middle" width="398.06744999999995pt" height="59.178735pt"/></p>
+<p align="center"><img alt="$$&#10;\theta_p^{(k+1)} = \frac{1}{a_{pp}} \left( b_p - \sum_{\substack{q = 1 \\ q \neq p}}^{n} a_{pq} \theta_q^{(k)} \right), \quad p \in \left\{ 1, 2, \ldots , n \right\}.&#10;$$" src="./doc/formula/146bcecd57131c95a147f8472a179c45.svg" align="middle" width="382.83299999999997pt" height="78.904815pt"/></p>
 
-#### Gauss-Seidel Iteration (Point)
+#### Gauss-Seidel Iteration
 
 Square matrix <img alt="$\mathbf{A}$" src="./doc/formula/96458543dc5abd380904d95cae6aa2bc.svg" align="middle" width="14.292300000000003pt" height="22.557149999999986pt"/> can be decomposed into its lower triangular component <img alt="$\mathbf{L_\ast}$" src="./doc/formula/0bc7c34ea269f7f68091dcab926d65da.svg" align="middle" width="18.105120000000003pt" height="22.557149999999986pt"/>, and its strictly upper triangular component <img alt="$\mathbf{U}$" src="./doc/formula/35531be55273dc37ee90083451d089ff.svg" align="middle" width="14.543430000000004pt" height="22.557149999999986pt"/>:
 
@@ -237,11 +237,34 @@ Thus the element-based formula is
 
 <p align="center"><img alt="$$&#10;\theta_p^{(k+1)} = \frac{1}{a_{pp}} \left( b_p - \sum_{q = 1}^{p - 1} a_{pq} \theta_q^{(k + 1)} - \sum_{q = p + 1}^{n} a_{pq} \theta_q^{(k)} \right), \quad p \in \left\{ 1, 2, \ldots , n \right\}.&#10;$$" src="./doc/formula/9f43245120a3674f3c1ccf2eab3437c7.svg" align="middle" width="508.77750000000003pt" height="50.20125pt"/></p>
 
-#### Jacobi Iteration (Line)
+#### Jacobi Iteration (Block) + TDMA Algorithm
 
-Soon...
+The methods of the previous sections are also referred to as *point* or *line* iterative methods, since they act on single entries of matrix <img alt="$\mathbf{A}$" src="./doc/formula/96458543dc5abd380904d95cae6aa2bc.svg" align="middle" width="14.292300000000003pt" height="22.557149999999986pt"/>. It is possible to devise block versions of the algorithms, provided that square matrix <img alt="$\mathbf{A}$" src="./doc/formula/96458543dc5abd380904d95cae6aa2bc.svg" align="middle" width="14.292300000000003pt" height="22.557149999999986pt"/> is divided to <img alt="$m$" src="./doc/formula/0e51a2dede42189d77627c4d742822c3.svg" align="middle" width="14.433210000000003pt" height="14.155350000000013pt"/>-by-<img alt="$m$" src="./doc/formula/0e51a2dede42189d77627c4d742822c3.svg" align="middle" width="14.433210000000003pt" height="14.155350000000013pt"/> diagonal blocks of matrix, while vector <img alt="$b$" src="./doc/formula/4bdc8d9bcfb35e1c9bfb51fc69687dfc.svg" align="middle" width="7.054855500000005pt" height="22.831379999999992pt"/> is divided to <img alt="$m$" src="./doc/formula/0e51a2dede42189d77627c4d742822c3.svg" align="middle" width="14.433210000000003pt" height="14.155350000000013pt"/>-by-<img alt="$1$" src="./doc/formula/034d0a6be0424bffe9a6e7ac9236c0f5.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> blocks of vector:
 
-#### Gauss-Seidel Iteration (Line)
+<p align="center"><img alt="$$&#10;\mathbf{A} = \left[&#10;\begin{matrix}&#10;\mathbf{A}_{11} &amp; \mathbf{A}_{12} &amp; \cdots &amp; \mathbf{A}_{1m} \\&#10;\mathbf{A}_{21} &amp; \mathbf{A}_{22} &amp; \cdots &amp; \mathbf{A}_{2m} \\&#10;\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\&#10;\mathbf{A}_{m1} &amp; \mathbf{A}_{m2} &amp; \cdots &amp; \mathbf{A}_{mm} \\&#10;\end{matrix}\right], \quad&#10;b = \left[&#10;\begin{matrix}&#10;b_{1} \\&#10;b_{2} \\&#10;\vdots \\&#10;b_{m} \\&#10;\end{matrix}\right].&#10;$$" src="./doc/formula/764003dff78ada7d75822fd1622b339a.svg" align="middle" width="338.6889pt" height="88.76801999999999pt"/></p>
+
+The solution is then obtained iteratively via 
+
+<p align="center"><img alt="$$&#10;\mathbf{A}_{pp} \theta_p^{(k + 1)} = b_p - \sum_{\substack{q = 1 \\ q \neq p}}^p \mathbf{A}_{pq} \theta_p^{(k)}, \quad p \in \left\{ 1, 2, \ldots , m \right\}.&#10;$$" src="./doc/formula/961536fc30194f28e63f2f64093c3baf.svg" align="middle" width="360.41279999999995pt" height="59.617305pt"/></p>
+
+Where, subscript <img alt="$p$" src="./doc/formula/2ec6e630f199f589a2402fdf3e0289d5.svg" align="middle" width="8.270625000000004pt" height="14.155350000000013pt"/> is no longer the index of points, but the index of blocks.
+
+In addition, TDMA algorithm introduces a method to directly solve *tridiagonal* systems of equations, which can be combined with block Jocobi iteration method to reduce the time consumption of iterative process. 
+
+- When subscript <img alt="$i$" src="./doc/formula/77a3b857d53fb44e33b53e4c8b68351a.svg" align="middle" width="5.663295000000005pt" height="21.683310000000006pt"/> loops from <img alt="$1$" src="./doc/formula/034d0a6be0424bffe9a6e7ac9236c0f5.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> to <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/>, the <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/>-by-<img alt="$1$" src="./doc/formula/034d0a6be0424bffe9a6e7ac9236c0f5.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> vector <img alt="$\theta_i$" src="./doc/formula/f166369f3ef0a7ff052f1e9bbf57d2e2.svg" align="middle" width="12.367905000000004pt" height="22.831379999999992pt"/> can be solved directly by TDMA algorithm:
+
+<p align="center"><img alt="$$&#10;-a_{i, j - 1} \theta_{i, j - 1}^{(k + 1)} + a_{i, j} \theta_{i, j}^{(k + 1)} - a_{i, j + 1} \theta_{i, j + 1}^{(k + 1)} = a_{i - 1, j} \theta_{i - 1, j}^{(k)} + a_{i + 1, j} \theta_{i + 1, j}^{(k)} + b_{i, j}.&#10;$$" src="./doc/formula/7ffcd795adfa7aa2720d440bd65eb2f1.svg" align="middle" width="539.3684999999999pt" height="23.988359999999997pt"/></p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Note that <img alt="$a_{i, 0} = a_{i, N_Y + 1} = 0$" src="./doc/formula/6886a07e1d0cd1a1c45b9f5f3ec2ea14.svg" align="middle" width="131.675445pt" height="21.18732pt"/> in this equation.
+
+- When subscript <img alt="$j$" src="./doc/formula/36b5afebdba34564d884d347484ac0c7.svg" align="middle" width="7.710483000000004pt" height="21.683310000000006pt"/> loops from <img alt="$1$" src="./doc/formula/034d0a6be0424bffe9a6e7ac9236c0f5.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> to <img alt="$N_Y$" src="./doc/formula/451a9ba1c48b04fdcd537308328e8b66.svg" align="middle" width="23.766105000000007pt" height="22.46574pt"/>, the <img alt="$N_X$" src="./doc/formula/4855e1a0b6043df68024a06e6eb9d355.svg" align="middle" width="24.882495000000002pt" height="22.46574pt"/>-by-<img alt="$1$" src="./doc/formula/034d0a6be0424bffe9a6e7ac9236c0f5.svg" align="middle" width="8.219277000000005pt" height="21.18732pt"/> vector <img alt="$\theta_j$" src="./doc/formula/455b7e5df6537b98819492ec6537494c.svg" align="middle" width="13.821390000000005pt" height="22.831379999999992pt"/> can be solved directly by TDMA algorithm:
+
+<p align="center"><img alt="$$&#10;-a_{i - 1, j} \theta_{i - 1, j}^{(k + 1)} + a_{i, j} \theta_{i, j}^{(k + 1)} - a_{i + 1, j} \theta_{i + 1, j}^{(k + 1)} = a_{i, j - 1} \theta_{i, j - 1}^{(k)} + a_{i, j + 1} \theta_{i, j + 1}^{(k)} + b_{i, j}.&#10;$$" src="./doc/formula/c1eace5aa886d973b34d5ffa83b27af5.svg" align="middle" width="539.3684999999999pt" height="23.988359999999997pt"/></p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Note that <img alt="$a_{0, j} = a_{N_X + 1, j} = 0$" src="./doc/formula/b2b75fc627963e9e50a9a7a6181aef2b.svg" align="middle" width="135.30198000000001pt" height="21.18732pt"/> in this equation.
+
+
+#### Gauss-Seidel Iteration (Block) + TDMA Algorithm
 
 Soon...
 
@@ -276,13 +299,13 @@ When <img alt="$i = 1$" src="./doc/formula/0ac75c805f5e7bf3181cb114d8ac5ae4.svg"
 
 - If <img alt="$k_1 &gt; 0$" src="./doc/formula/b59a2e7b013ab49bd37368a762f50327.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>,
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = A_1^+ \sqrt{k_1} G_1 = 0 &#10;\quad \Rightarrow \quad&#10;A_1^+ = 0; \\[1.5em]&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=L_x/L} = -B_1^+ \sqrt{k_1} \sin\dfrac{\sqrt{k_1} L_x}{L} = 0 &#10;\quad \Rightarrow \quad&#10;B_1^+ = 0.&#10;\end{array}&#10;$$" src="./doc/formula/09dd11370feba0968a955736d21798fc.svg" align="middle" width="401.60835pt" height="98.93845499999999pt"/></p> 
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = A_1^+ \sqrt{k_1} G_1 = 0 &#10;\quad \Rightarrow \quad&#10;A_1^+ = 0; \\[1.5em]&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=L_x/L} = -B_1^+ \sqrt{k_1} \sin\dfrac{\sqrt{k_1} L_x}{L} = 0 &#10;\quad \Rightarrow \quad&#10;B_1^+ = 0.&#10;\end{array}&#10;$$" src="./doc/formula/09dd11370feba0968a955736d21798fc.svg" align="middle" width="401.60835pt" height="98.93845499999999pt"/></p>
 
 &ensp;&ensp;&ensp;&ensp;Considered that <img alt="$F_1(X) \equiv 0$" src="./doc/formula/ebb529f149ef135059765a311a077842.svg" align="middle" width="75.77625pt" height="24.65759999999998pt"/> contradicts the assumption, the equation of <img alt="$\text{E}_1$" src="./doc/formula/278b90d99558726b26fb43f8def8b042.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> has no solution when <img alt="$k_1 &gt; 0$" src="./doc/formula/b59a2e7b013ab49bd37368a762f50327.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>.
 
 - If <img alt="$k_1 &lt; 0$" src="./doc/formula/ce08b0ba2b0ada65699b871e1122450d.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>, 
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = A_1^- \sqrt{-k_1} G_1 = 0 &#10;\quad \Rightarrow \quad&#10;A_1^- = 0; \\[1.5em]&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=L_x/L} = B_1^- \sqrt{-k_1} \sinh\dfrac{\sqrt{-k_1} L_x}{L} = 0 &#10;\quad \Rightarrow \quad&#10;B_1^- = 0.&#10;\end{array}&#10;$$" src="./doc/formula/5a8e2baf91515af2c77db2f09fd9b295.svg" align="middle" width="423.8916pt" height="98.93845499999999pt"/></p> 
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=0} = A_1^- \sqrt{-k_1} G_1 = 0 &#10;\quad \Rightarrow \quad&#10;A_1^- = 0; \\[1.5em]&#10;\left.\dfrac{\partial \theta_1}{\partial X}\right\vert_{X=L_x/L} = B_1^- \sqrt{-k_1} \sinh\dfrac{\sqrt{-k_1} L_x}{L} = 0 &#10;\quad \Rightarrow \quad&#10;B_1^- = 0.&#10;\end{array}&#10;$$" src="./doc/formula/5a8e2baf91515af2c77db2f09fd9b295.svg" align="middle" width="423.8916pt" height="98.93845499999999pt"/></p>
 
 &ensp;&ensp;&ensp;&ensp;Considered that <img alt="$F_1(X) \equiv 0$" src="./doc/formula/ebb529f149ef135059765a311a077842.svg" align="middle" width="75.77625pt" height="24.65759999999998pt"/> contradicts the assumption, the equation of <img alt="$\text{E}_1$" src="./doc/formula/278b90d99558726b26fb43f8def8b042.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> has no solution when <img alt="$k_1 &lt; 0$" src="./doc/formula/ce08b0ba2b0ada65699b871e1122450d.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>.
 
@@ -296,7 +319,7 @@ When <img alt="$i = 2$" src="./doc/formula/85fb1bddc68e7fda92939c7099078e6b.svg"
 
 - If <img alt="$k_2 &gt; 0$" src="./doc/formula/e306bf4981c57add7aa42f5ae4370824.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>, 
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\theta_2\right\vert_{Y=0} = D_2^+ F_2 = 0  &#10;\quad \Rightarrow \quad&#10;D_2^+ = 0; \\[1.5em]&#10;\left.\theta_2\right\vert_{X=L_y/L} = C_2^+ \sinh\dfrac{\sqrt{k_2} L_y}{L} = 0 &#10;\quad \Rightarrow \quad&#10;C_2^+ = 0.&#10;\end{array}&#10;$$" src="./doc/formula/890950661a993ee88d10e567f7a0cc88.svg" align="middle" width="354.4794pt" height="81.218445pt"/></p> 
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\left.\theta_2\right\vert_{Y=0} = D_2^+ F_2 = 0  &#10;\quad \Rightarrow \quad&#10;D_2^+ = 0; \\[1.5em]&#10;\left.\theta_2\right\vert_{X=L_y/L} = C_2^+ \sinh\dfrac{\sqrt{k_2} L_y}{L} = 0 &#10;\quad \Rightarrow \quad&#10;C_2^+ = 0.&#10;\end{array}&#10;$$" src="./doc/formula/890950661a993ee88d10e567f7a0cc88.svg" align="middle" width="354.4794pt" height="81.218445pt"/></p>
 
 &ensp;&ensp;&ensp;&ensp;Considered that <img alt="$G_2(Y) \equiv 0$" src="./doc/formula/a02c00ce03ec81509800ec9d58c5296f.svg" align="middle" width="76.41776999999999pt" height="24.65759999999998pt"/> contradicts the assumption, the equation of <img alt="$\text{E}_2$" src="./doc/formula/975aeec5482df93394e935220136a624.svg" align="middle" width="17.739810000000002pt" height="22.46574pt"/> has no solution when <img alt="$k_2 &gt; 0$" src="./doc/formula/e306bf4981c57add7aa42f5ae4370824.svg" align="middle" width="46.06932pt" height="22.831379999999992pt"/>.
 
@@ -310,7 +333,7 @@ When <img alt="$i = 2$" src="./doc/formula/85fb1bddc68e7fda92939c7099078e6b.svg"
 
 &ensp;&ensp;&ensp;&ensp;where <img alt="$n \in \mathbb{N}^+$" src="./doc/formula/65b9daa7d31517c726c6180d181d979d.svg" align="middle" width="51.921704999999996pt" height="26.177579999999978pt"/>. According to two other boundary conditions, 
 
-<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\displaystyle \sum_{n = 1}^\infty A_{2n}^- C_{2n}^- \dfrac{n \pi L}{L_y} \sin \dfrac{n \pi L}{L_y} Y = -\phi_w ; \\[1.5em]&#10;A_{2n}^- C_{2n}^- \cosh \dfrac{n \pi L_x}{L_y} + B_{2n}^- C_{2n}^- \sinh \dfrac{n \pi L_x}{L_y} = 0.&#10;\end{array}&#10;$$" src="./doc/formula/c7e868ea210ddcc868d583857b71f69a.svg" align="middle" width="322.9776pt" height="94.41036pt"/></p> 
+<p align="center"><img alt="$$&#10;\begin{array}{c}&#10;\displaystyle \sum_{n = 1}^\infty A_{2n}^- C_{2n}^- \dfrac{n \pi L}{L_y} \sin \dfrac{n \pi L}{L_y} Y = -\phi_w ; \\[1.5em]&#10;A_{2n}^- C_{2n}^- \cosh \dfrac{n \pi L_x}{L_y} + B_{2n}^- C_{2n}^- \sinh \dfrac{n \pi L_x}{L_y} = 0.&#10;\end{array}&#10;$$" src="./doc/formula/c7e868ea210ddcc868d583857b71f69a.svg" align="middle" width="322.9776pt" height="94.41036pt"/></p>
 
 &ensp;&ensp;&ensp;&ensp;Moreover, based on the orthonormality of eigen equations, 
 
@@ -347,6 +370,7 @@ Relative codes can be referred to [analytic.f90](analytic.f90). Non-dimensional 
 
 - 吴清松. 计算热物理引论[M]. 合肥: 中国科学技术大学出版社, 2009.
 - Saad Y. Iterative methods for sparse linear systems[M]. SIAM, 2003.
+- Moukalled, F., Mangani, L., Darwish, M. The Finite Volume Method in Computational Fluid Dynamics: an Advanced Introduction with Openfoam® and Matlab®[M]. Springer, 2016.
 - Peaceman D W, Rachford H H. The numerical solution of parabolic and elliptic differential equations[J]. Journal of the Society for industrial and Applied Mathematics, 1955, 3: 28-41.
 - 吴崇试. 数学物理方法[M]. 北京: 北京大学出版社, 2003.
 - 顾樵. 数学物理方法[M]. 北京: 科学出版社, 2015.

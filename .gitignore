@@ -1,8 +1,10 @@
 # Ignore VS Code config settings
-/.vscode
+settings.json
+spellright.dict
 
 # Ignore cmake output files
 /build
+/out
 
 # Ignore readme source file
 README_RAW.md
