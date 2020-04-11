@@ -1,22 +1,23 @@
 ! =================================================
-!   Subroutine to calculate max deviation between
-!   two matrices.
+!   Calculate max deviation between two matrices.
 ! =================================================
 
-subroutine maxerr(Nx, Ny, val, val0, err)
+subroutine max_deviation(mat, mat0, err)
 
+    use coordinates, only: Nx, Ny
+    use conv_config, only: conv_cr
     implicit none
 
-    integer*4, intent(in)  :: Nx, Ny
-    real*8,    intent(in)  :: val(Nx,Ny)
-    real*8,    intent(in)  :: val0(Nx,Ny)
-    real*8,    intent(out) :: err
+    real*8, intent(in)  :: mat(Nx,Ny)
+    real*8, intent(in)  :: mat0(Nx,Ny)
+    real*8, intent(out) :: err
 
-    real*8, allocatable :: tmp(:)
-    real*8, allocatable :: tmp0(:)
+    real*8, dimension(Nx*Ny) :: vec, vec0, rand
 
-    tmp  = reshape(val, (/Nx*Ny/))
-    tmp0 = reshape(val0, (/Nx*Ny/))
-    err  = maxval(abs(tmp - tmp0)/tmp0)
+    vec  = reshape(mat,  (/Nx*Ny/))
+    vec0 = reshape(mat0, (/Nx*Ny/))
+    call random_seed()
+    call random_number(rand)
+    err  = maxval(abs(vec - vec0)/(vec0 + 0.001*conv_cr*rand))
 
 end subroutine

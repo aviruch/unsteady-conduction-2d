@@ -2,84 +2,65 @@
 !   Analytical solution.
 ! =================================================
 
-subroutine analytic(T0)
-
-    use params 
-    implicit none
-
-    real*8, intent(out)  :: T0(Nx,Ny)
-
-    character(len=:), allocatable :: dir
-    real*8,           parameter   :: PI = 4*atan(1.0_8)
-    real*8                        :: L
-    integer*4                     :: S, Smax
-    real*8                        :: A2, B2, A3, B3
-    real*8                        :: T_1(Nx,Ny)
-    real*8                        :: T_2(Nx,Ny)
-    real*8                        :: T_3(Nx,Ny)
-    real*8                        :: x_tmp2(Nx,Ny)
-    real*8                        :: y_tmp2(Nx,Ny)
-    real*8                        :: x_tmp3(Nx,Ny)
-    real*8                        :: y_tmp3(Nx,Ny)
-
-    ! Initialization
-    ! call init()
-
-    ! Seperate variable method
-    L    = .5*(Lx + Ly)
-    T_1 = L/Ly*y_
-
-    Smax = 10
-    T_2 = 0.0_8
-    T_3 = 0.0_8
-    do S = 1, Smax, 2
-        x_tmp2 = S*PI*L/Ly*x_
-        y_tmp2 = S*PI*L/Ly*y_
-        A2  = -2*Ly**2*qw_/(S*PI*L)**2
-        B2  = -A2/tanh(S*PI*Lx/Ly)
-        T_2 = T_2 + sin(y_tmp2)* & 
-            & (A2*sinh(x_tmp2) + B2*cosh(x_tmp2))
-        x_tmp3 = S*PI*L/Ly*(Lx/L - x_)
-        y_tmp3 = S*PI*L/Ly*y_
-        A3  = -2*Ly**2*qe_/(S*PI*L)**2
-        B3  = -A3/tanh(S*PI*Lx/Ly)
-        T_3 = T_3 + sin(y_tmp3)* & 
-            & (A2*sinh(x_tmp3) + B2*cosh(x_tmp3))
-    end do
-
-    T_ = T_1 + T_2 + T_3
-    T0  = T_*(Tn - Ts) + Ts
-
-    ! Visualization
-    dir  = ".\\out\\analytic\\"
-    call output(dir, 0, "T", T0)
-
-end subroutine
-
-
-! =================================================
-!   Compare numerical solution with analytical 
-!       solution, calculate the average value and 
-!       standard deviation of the error.
-! =================================================
-
-subroutine cmperr(Nx, Ny, val, val0, avg, std)
+module analytic_solver
 
     implicit none
-
-    integer*4, intent(in)  :: Nx, Ny
-    real*8,    intent(in)  :: val(Nx,Ny)
-    real*8,    intent(in)  :: val0(Nx,Ny)
-    real*8,    intent(out) :: avg, std
-
-    real*8, allocatable :: tmp(:)
-    real*8, allocatable :: tmp0(:)
-    real*8, allocatable :: err(:)
-
-    tmp  = reshape(val, (/Nx*Ny/))
-    tmp0 = reshape(val0, (/Nx*Ny/))
-    err  = (tmp - tmp0)/tmp0
-    avg  = sum(err)/(Nx*Ny)
-    std  = sqrt(sum((err - avg)**2))/(Nx*Ny)
+    public :: calc_analytic
+    public :: comp_analytic
     
-end subroutine
+contains
+
+    subroutine calc_analytic(T, T_)
+
+        use physical_def, only: Lx, Ly, Tn, Ts, Lx_, Ly_, qw_, qe_
+        use coordinates,  only: Nx, Ny, x_, y_
+        use conv_config,  only: conv_cr, conv_max
+
+        real*8, intent(out) :: T(Nx,Ny), T_(Nx,Ny)
+
+        character(len=:), allocatable :: dir
+        real*8,           parameter   :: PI = 4*atan(1.0_8)
+        integer*4                     :: n, INF = conv_max
+        real*8                        :: T0_(Nx,Ny), err
+        
+        ! Series summation
+        T0_ = y_/Ly_
+        do n = 1, INF
+            T_ = T0_ - 2*(-1 + (-1)**n)*Ly_/(n*PI)**2                    &
+            &   *(qe_*cosh(n*PI/Ly_*x_) + qw_*cosh(n*PI/Ly_*(Lx_ - x_))) &
+            &   /sinh(n*PI*Lx_/Ly_)*sin(n*PI/Ly_*y_)
+            call max_deviation(T_, T0_, err)
+            if (err > 0 .and. err < conv_cr) exit
+            T0_ = T_
+        end do
+        T = T_*(Tn - Ts) + Ts
+
+        ! Visualization
+        dir = ".\\out\\analytic\\"
+        call check_dir(dir)
+        call save_tecplot_file(dir, 0, "Temperature", T)
+        
+    end subroutine calc_analytic
+    
+    subroutine comp_analytic(mat_n, mat_a, avg, std)
+
+        use coordinates, only: Nx, Ny
+        
+        real*8, intent(in)  :: mat_n(Nx,Ny)
+        real*8, intent(in)  :: mat_a(Nx,Ny)
+        real*8, intent(out) :: avg, std
+        
+        real*8, allocatable :: vec_n(:)
+        real*8, allocatable :: vec_a(:)
+        real*8, allocatable :: err(:)
+        
+        vec_n = reshape(mat_n, (/Nx*Ny/))
+        vec_a = reshape(mat_a, (/Nx*Ny/))
+        err = (vec_n - vec_a)/vec_a
+        avg = sum(err)/(Nx*Ny)
+        std = sqrt(sum((err - avg)**2))/(Nx*Ny)
+    
+    end subroutine comp_analytic
+    
+    
+end module 

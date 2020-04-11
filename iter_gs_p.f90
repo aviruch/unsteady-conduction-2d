@@ -3,11 +3,13 @@
 !       linear equation system 'Ax = b'.
 ! =================================================
 
-subroutine iter_gs_p(n, A, b, x, iter_cr, iter_max)
+subroutine iter_gs_p(A, b, x, iter_cr, iter_max)
 
+    use coordinates, only: Nx, Ny
+    use log_config,  only: log_conv_show
     implicit none
 
-    integer*4, intent(in)    :: n
+    integer*4, parameter     :: n = Nx*Ny
     real*8,    intent(in)    :: A(n,n)
     real*8,    intent(in)    :: b(n)
     real*8,    intent(inout) :: x(n)
@@ -35,8 +37,7 @@ subroutine iter_gs_p(n, A, b, x, iter_cr, iter_max)
         end do
 
         iter_err = maxval(abs(x - x0)/x0)
-        write(*, "(A5, I4, A8, E12.4E2)") &
-            & "", iter_cnt,  "", iter_err
+        if (log_conv_show) print *, "", iter_cnt,  iter_err
         if (iter_err < iter_cr) exit
 
         x0 = x

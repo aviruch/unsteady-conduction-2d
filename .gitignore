@@ -1,9 +1,6 @@
-# Ignore VS Code config settings
-settings.json
-spellright.dict
-
-# Ignore cmake output files
-/build
+# Ignore output files
+/Debug
+/Release
 /out
 
 # Ignore readme source file
