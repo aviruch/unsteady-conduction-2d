@@ -1,4 +1,5 @@
 # Ignore output files
+/.vs
 /Debug
 /Release
 /out
