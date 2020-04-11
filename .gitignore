@@ -1,5 +1,6 @@
 # Ignore output files
 /.vs
+*.u2d
 /Debug
 /Release
 /out
